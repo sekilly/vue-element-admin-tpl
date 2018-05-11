@@ -35,7 +35,6 @@ import MBackTop from '@/m/back-top'
 import MLoader from '@/m/loader'
 import MContainer from '@/m/container'
 
-
 Vue.use(ElementUI)
 
 Vue.use(DropdownPlugin)
