@@ -5,6 +5,14 @@ const menus = [
     icon: 'fa fa-gears',
     label: '系统设置',
     submenu: [
+      {
+        id: 'organization',
+        label: '组织管理',
+        icon: 'fa el-icon-menu',
+        submenu: [{id: 'user', name: 'user', label: '用户管理', icon: 'fa fa-user-o'},
+          {id: 'group', name: 'group', label: '组织管理', icon: 'fa fa-hand-o-up'},
+          {id: 'job', name: 'job', label: '岗位管理', icon: 'fa fa-hand-o-up'}]
+      },
       {id: 'organization', label: '组织架构管理', icon: 'fa el-icon-menu'},
       {id: 'user', name: 'user', label: '用户管理', icon: 'fa fa-user-o'},
       {id: 'role', name: 'role', label: '角色管理', icon: 'fa fa-user-circle-o'},
