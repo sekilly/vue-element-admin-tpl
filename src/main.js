@@ -18,7 +18,6 @@ import '@/assets/css/reset.css'
 import 'nprogress/nprogress.css'
 import 'animate.css'
 
-
 import DropdownPlugin from './m/dropdown'
 import NavbarPlugin from './m/navbar'
 import ContextMenuPlugin from './m/context-menu'
@@ -35,8 +34,10 @@ import MBackTop from '@/m/back-top'
 import MLoader from '@/m/loader'
 import MContainer from '@/m/container'
 
-Vue.use(ElementUI)
+import global from './Global'
+Vue.prototype.global = global
 
+Vue.use(ElementUI)
 Vue.use(DropdownPlugin)
 Vue.use(NavbarPlugin)
 Vue.use(ContextMenuPlugin)
@@ -56,7 +57,7 @@ Vue.use(MContainer)
 
 var whiteList = ['demo', 'login']
 router.beforeEach((to, from, next) => {
-  NProgress.start()
+  // NProgress.start()
   var token = sessionStorage.getItem('token')
   if (!token && whiteList.indexOf(to.name) === -1) {
     app && app.$message.warning('未授权，请登陆授权后继续')
@@ -99,6 +100,12 @@ Axios.interceptors.response.use(res => {
     sessionStorage.removeItem('user')
     router.push({name: 'login'})
     return Promise.reject(new Error('身份过期'))
+  } else if (res.data.code !== 0) {
+    app && app.$message({
+      type: 'warning',
+      message: res.data.msg
+    })
+    return Promise.reject(new Error(res.data))
   } else {
     return res.data
   }
