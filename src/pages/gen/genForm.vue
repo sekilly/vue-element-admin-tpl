@@ -111,7 +111,7 @@
             </el-table-column>
             <el-table-column label="匹配方式" prop="queryType">
               <template slot-scope="scope">
-                <el-select v-model="scope.row.queryType">
+                <el-select v-model="scope.row.queryType" >
                   <el-option key="=" label="=" value="="></el-option>
                   <el-option key="!=" label="!=" value="!="></el-option>
                   <el-option key="&gt;" label="&gt;" value="&gt;"></el-option>
