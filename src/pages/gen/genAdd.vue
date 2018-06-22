@@ -16,7 +16,6 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <a href="/genList" class="m-button m-button-type-plain" v-on:click.stop.prevent="checkTableName('genTable')">下一步</a>
         <el-button type="primary" @click="checkTableName('genTable')">下一步</el-button>
         <el-button plain @click="back">返回</el-button>
       </el-form-item>
@@ -64,13 +63,13 @@
             this.$http.get(this.global.serverPath + 'gen/genTable/checkTableName', {params: this.genTable}, {emulateJSON: true})
               .then((response) => {
                 console.log(response)
-                return true
+                localStorage.setItem('genTableName', this.genTable.name)
+                this.$router.push('/genForm')
               }, (response) => {
                 console.log('error ==== ' + response)
               })
           } else {
             console.log('error submit!!')
-            return false
           }
         })
       },
