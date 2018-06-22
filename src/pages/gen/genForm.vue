@@ -54,16 +54,16 @@
       </el-tab-pane>
       <el-tab-pane label="字段信息">
         <el-table :data="genTable.columnList"  border>
-          <el-table-column label="#" type="index" align="center"></el-table-column>
-          <el-table-column label="字段信息" align="center">
-            <el-table-column label="列名" prop="name"></el-table-column>
-            <el-table-column label="描述" prop="comments">
+          <el-table-column label="#" type="index" header-align="center"></el-table-column>
+          <el-table-column label="字段信息" header-align="center">
+            <el-table-column label="列名" prop="name" header-align="center"></el-table-column>
+            <el-table-column label="描述" prop="comments" header-align="center">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.comments"></el-input>
               </template>
             </el-table-column>
-            <el-table-column label="字段类型" prop="jdbcType" width="100px"></el-table-column>
-            <el-table-column label="属性类型" prop="javaType">
+            <el-table-column label="字段类型" prop="jdbcType" width="100px" header-align="center"></el-table-column>
+            <el-table-column label="属性类型" prop="javaType" header-align="center">
               <template slot-scope="scope">
                 <el-select v-model="scope.row.javaType">
                   <el-option key="String" label="String" value="String"></el-option>
@@ -77,7 +77,7 @@
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column label="属性名称" prop="javaField">
+            <el-table-column label="属性名称" prop="javaField" header-align="center">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.javaField"></el-input>
               </template>
@@ -109,7 +109,7 @@
                 <el-checkbox v-model="scope.row.isQuery" ></el-checkbox>
               </template>
             </el-table-column>
-            <el-table-column label="匹配方式" prop="queryType">
+            <el-table-column label="匹配方式" prop="queryType" header-align="center">
               <template slot-scope="scope">
                 <el-select v-model="scope.row.queryType" >
                   <el-option key="=" label="=" value="="></el-option>
@@ -130,9 +130,30 @@
                 <el-checkbox v-model="scope.row.isNull" ></el-checkbox>
               </template>
             </el-table-column>
-            <el-table-column label="表单类型" prop="showType"></el-table-column>
-            <el-table-column label="字典类型" prop="dictType"></el-table-column>
-            <el-table-column label="排序" prop="sort"></el-table-column>
+            <el-table-column label="表单类型" prop="showType" header-align="center">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.showType" >
+                  <el-option key="input" label="文本框" value="input"></el-option>
+                  <el-option key="textarea" label="文本域" value="textarea"></el-option>
+                  <el-option key="select" label="下拉框" value="select"></el-option>
+                  <el-option key="checkbox" label="复选框" value="checkbox"></el-option>
+                  <el-option key="radiobox" label="单选框" value="radiobox"></el-option>
+                  <el-option key="dateselect" label="日期选择" value="dateselect"></el-option>
+                  <el-option key="userselect" label="人员选择" value="userselect"></el-option>
+                  <el-option key="orgselect" label="组织选择" value="orgselect"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="字典类型" prop="dictType" header-align="center">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.dictType"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="排序" prop="sort" header-align="center">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.sort"></el-input>
+              </template>
+            </el-table-column>
           </el-table-column>
           <!--<el-table-column label="操作">
             <template slot-scope="scope">
