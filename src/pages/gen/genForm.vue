@@ -7,7 +7,7 @@
   </div>
 
 
-  <el-form :inline="true" :model="genTable" ref="genTable" label-width="20%">
+  <el-form :inline="true" :model="genTable" ref="genTable" label-width="20%" >
     <el-tabs type="border-card">
       <el-tab-pane>
         <span slot="label">基本信息</span>
@@ -155,18 +155,60 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <!--<el-table-column label="操作">
-            <template slot-scope="scope">
-              <a href="#" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;
-              <a href="#" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
-            </template>
-          </el-table-column>-->
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="生成信息">生成信息</el-tab-pane>
-      <el-form-item>
+      <el-tab-pane label="生成信息">
+        <table width="100%">
+          <tr>
+            <td width="50%">
+              <el-form-item label="生产模板：" prop="name" class="el-form-item-width">
+                <el-input v-model="genTable.name"></el-input>
+              </el-form-item>
+            </td>
+            <td width="50%">
+              <el-form-item label="生成包路径：" class="el-form-item-width">
+                <el-input v-model="genTable.comments" ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="生成模块名：" class="el-form-item-width">
+                <el-input v-model="genTable.className"></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="生成子模块名：" class="el-form-item-width">
+                <el-input v-model="genTable.functionAuthor"></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="生成功能名：" class="el-form-item-width">
+                <el-input v-model="genTable.className"></el-input>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="功能名（简写）：" class="el-form-item-width">
+                <el-input v-model="genTable.functionAuthor"></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="生成基础路径：" class="el-form-item-width">
+                <el-input v-model="genTable.className"></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+        </table>
+      </el-tab-pane>
+      <br>
+      <el-form-item :inline="true">
         <el-button type="primary" @click="checkTableName('genTable')">保存</el-button>
         <a href="/genList" class="m-button m-button-type-plain">关闭</a>
+        <el-checkbox v-model="isReplace" >是否替换现有文件</el-checkbox>
         <!--<el-button plain @click="back">返回</el-button>-->
       </el-form-item>
     </el-tabs>
@@ -188,6 +230,9 @@
   }
   .el-form-item-width{
     width: 100%;
+  }
+  .el-table th{
+    background: #a5ddf4 !important;
   }
 </style>
 <script>

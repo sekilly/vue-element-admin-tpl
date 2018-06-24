@@ -60,6 +60,9 @@
     background-color: #727B84!important;
     color: #fff!important;
   }
+  .el-table th{
+    background: #a5ddf4 !important;
+  }
 </style>
 <script>
   export default {
