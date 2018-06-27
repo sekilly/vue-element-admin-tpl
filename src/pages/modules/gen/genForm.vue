@@ -67,7 +67,7 @@
               <template slot-scope="scope">
                 <el-select v-model="scope.row.javaType">
                   <el-option key="String" label="String" value="String"></el-option>
-                  <el-option key="Integer" label="Integer" value="Integer"></el-option>
+                  <el-option key="int" label="Integer" value="Integer"></el-option>
                   <el-option key="Long" label="Long" value="Long"></el-option>
                   <el-option key="Double" label="Double" value="Double"></el-option>
                   <el-option key="tinyint" label="Boolean" value="Boolean"></el-option>
@@ -162,43 +162,43 @@
           <tr>
             <td width="50%">
               <el-form-item label="生产模板：" prop="name" class="el-form-item-width">
-                <el-input v-model="genTable.name"></el-input>
+                <el-input v-model="genTable.category"></el-input>
               </el-form-item>
             </td>
             <td width="50%">
               <el-form-item label="生成包路径：" class="el-form-item-width">
-                <el-input v-model="genTable.comments" ></el-input>
+                <el-input v-model="genTable.packageName" ></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="生成模块名：" class="el-form-item-width">
-                <el-input v-model="genTable.className"></el-input>
+                <el-input v-model="genTable.moduleName"></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="生成子模块名：" class="el-form-item-width">
-                <el-input v-model="genTable.functionAuthor"></el-input>
+                <el-input v-model="genTable.subModuleName"></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="生成功能名：" class="el-form-item-width">
-                <el-input v-model="genTable.className"></el-input>
+                <el-input v-model="genTable.functionName"></el-input>
               </el-form-item>
             </td>
             <td>
               <el-form-item label="功能名（简写）：" class="el-form-item-width">
-                <el-input v-model="genTable.functionAuthor"></el-input>
+                <el-input v-model="genTable.functionNameSimple"></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="生成基础路径：" class="el-form-item-width">
-                <el-input v-model="genTable.className"></el-input>
+                <el-input v-model="genTable.filePath"></el-input>
               </el-form-item>
             </td>
           </tr>

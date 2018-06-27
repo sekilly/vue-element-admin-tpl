@@ -11,8 +11,8 @@ const menus = [
         icon: 'fa el-icon-menu',
         submenu: [
           {id: 'user', name: 'user', label: '用户管理', icon: 'fa fa-user-o'},
-          {id: 'role', name: 'role', label: '角色管理', icon: 'fa fa-user-circle-o'},
           {id: 'group', name: 'group', label: '组织管理', icon: 'fa el-icon-menu'},
+          {id: 'role', name: 'role', label: '角色管理', icon: 'fa fa-user-circle-o'},
           {id: 'job', name: 'job', label: '岗位管理', icon: 'fa fa-trophy'}
         ]
       },
