@@ -2,7 +2,7 @@
 <div class="page-body">
   <div class="page-header">
     <div class="el-form-item">
-      <label class="el-form-item__label" >业务表配置</label>
+      <label class="el-form-item__label" >组织管理</label>
       <div align="right" class="el-form-item__content">
         <!--<a href="/orgAdd" class="m-button m-button-type-plain"><i class="fa fa-plus"></i> 新增</a>-->
         <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>

@@ -2,7 +2,7 @@
 <div class="page-body">
   <div class="page-header">
     <div class="el-form-item">
-      <label class="el-form-item__label" >业务表配置</label>
+      <label class="el-form-item__label" >用户管理</label>
       <div align="right" class="el-form-item__content">
         <!--<a href="/orgAdd" class="m-button m-button-type-plain"><i class="fa fa-plus"></i> 新增</a>-->
         <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>
@@ -23,7 +23,7 @@
           </div>
         </div>
         <el-aside style="width: 100%; margin-top: 15px">
-          <el-tree :data="orgList" @node-click="list" node-key="id" :props="{label:'name'}"></el-tree>
+          <el-tree :data="orgList" @node-click="list" node-key="id" v-loading="isTreeLoading" :props="{label:'name'}"></el-tree>
         </el-aside>
       </el-aside>
         <el-main>
@@ -52,8 +52,8 @@
             <el-table-column label="更新时间" prop="phone" header-align="center"></el-table-column>
             <el-table-column label="操作" align="center">
               <template slot-scope="scope">
-                <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;
-                <a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a href="javascript:void">&nbsp;
+                <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
+                <a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
               </template>
             </el-table-column>
           </el-table>
@@ -139,7 +139,8 @@
         searchShow: false,
         saveFormName: '新增',
         saveFormVisible: false,
-        isLoading: true
+        isLoading: true,
+        isTreeLoading: true
       }
     },
     mounted () {
@@ -165,7 +166,8 @@
         this.list()
       },
       list () {
-        this.$http.get(this.global.serverPath + 'org', {params: this.search}, {emulateJSON: true})
+        this.isLoading = true
+        this.$http.get(this.global.serverPath + 'user', {params: this.search}, {emulateJSON: true})
           .then((response) => {
             this.isLoading = false
             this.pager = response.data
@@ -181,7 +183,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'org', {params: {'id': id}}, {emulateJSON: true})
+          this.$http.delete(this.global.serverPath + 'user', {params: {'id': id}}, {emulateJSON: true})
             .then((response) => {
               this.list()
               this.getOrgTree()
@@ -196,7 +198,7 @@
       getById (id) {
         this.saveFormName = '编辑'
         console.log('getById ==== id = ' + id)
-        this.$http.get(this.global.serverPath + 'org/' + id)
+        this.$http.get(this.global.serverPath + 'user/' + id)
           .then((response) => {
             this.saveFormVisible = true
             this.saveBean = response.data
@@ -216,12 +218,10 @@
       },
       save () {
         console.log(this.saveBean)
-        this.$http.post(this.global.serverPath + 'org', this.saveBean, {emulateJSON: true})
+        this.$http.post(this.global.serverPath + 'user', this.saveBean, {emulateJSON: true})
           .then((response) => {
             this.saveFormVisible = false
             this.list()
-            this.getOrgTree()
-            // this.$message(response.msg)
           }, (response) => {
             console.log('error ==== ' + response)
             // return this.$message.warning('222')
@@ -232,9 +232,11 @@
         console.log(this.saveBean)
       },
       getOrgTree () {
+        this.isTreeLoading = true
         this.$http.get(this.global.serverPath + 'org/tree')
           .then((response) => {
             this.orgList = response.data
+            this.isTreeLoading = false
           }, (response) => {
             console.log('error ==== ' + response)
           })
