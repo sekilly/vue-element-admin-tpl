@@ -14,16 +14,19 @@
   <div class="box">
     <el-container style="height: 100%;">
       <el-aside width="200px">
-        <div class="box-header"><i class="fa el-icon-menu"></i> 组织架构 <a href="javascript:void(0)" @click="getOrgTree"><i class="fa fa-refresh"></i></a></div>
-
-        <el-aside style="width: 100%">
+        <div class="box-header">
+          <div class="box-title">
+            <i class="fa el-icon-menu"></i> 组织架构
+          </div>
+          <div class="box-tools pull-right">
+            <a href="javascript:void(0)" @click="getOrgTree"><i class="fa fa-refresh"></i></a>
+          </div>
+        </div>
+        <el-aside style="width: 100%; margin-top: 15px">
           <el-tree :data="orgList" @node-click="list" node-key="id" :props="{label:'name'}"></el-tree>
         </el-aside>
       </el-aside>
-
-
         <el-main>
-          <div class="box-header">用户管理</div>
           <el-form :inline="true" :model="search"  v-show="searchShow">
             <el-form-item label="组织名称：">
               <el-input v-model="search.name"></el-input>
@@ -110,6 +113,16 @@
   .box-header {
     border-bottom: 1px solid #eee;
     padding: 13px 10px 1px 15px;
+  }
+  .box .box-header .box-title {
+    font-size: 18px;
+    font-weight: 100;
+    margin: 0;
+    float: left;
+  }
+  .pull-right {
+    float: right;
+    margin-top: 3px;
   }
 </style>
 <script>
