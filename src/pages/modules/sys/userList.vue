@@ -2,7 +2,7 @@
 <div class="page-body">
   <div class="page-header">
     <div class="el-form-item">
-      <label class="el-form-item__label" >业务表配置</label>
+      <label class="el-form-item__label" >用户管理</label>
       <div align="right" class="el-form-item__content">
         <!--<a href="/orgAdd" class="m-button m-button-type-plain"><i class="fa fa-plus"></i> 新增</a>-->
         <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>
@@ -52,8 +52,8 @@
             <el-table-column label="更新时间" prop="phone" header-align="center"></el-table-column>
             <el-table-column label="操作" align="center">
               <template slot-scope="scope">
-                <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;
-                <a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a href="javascript:void">&nbsp;
+                <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
+                <a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
               </template>
             </el-table-column>
           </el-table>
@@ -246,6 +246,7 @@
         this.list()
       },
       list () {
+        this.isLoading = true
         this.$http.get(this.global.serverPath + 'user', {params: this.search}, {emulateJSON: true})
           .then((response) => {
             this.isLoading = false
@@ -262,7 +263,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'org', {params: {'id': id}}, {emulateJSON: true})
+          this.$http.delete(this.global.serverPath + 'user', {params: {'id': id}}, {emulateJSON: true})
             .then((response) => {
               this.list()
               this.getOrgTree()
