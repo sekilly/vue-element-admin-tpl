@@ -88,8 +88,8 @@
           </m-row>
           <m-row>
             <m-col md="6">
-              <el-form-item label="员工姓名：">
-                <el-input v-model="saveBean.name" :maxlength="20" prop="name"></el-input>
+              <el-form-item label="员工姓名：" prop="name">
+                <el-input v-model="saveBean.name" :maxlength="20"></el-input>
               </el-form-item>
             </m-col>
             <m-col md="6">
@@ -135,7 +135,7 @@
           <m-row>
             <m-col md="6">
               <el-form-item label="员工编号：">
-                <el-input v-model="saveBean.name" :maxlength="20"></el-input>
+                <el-input v-model="saveBean.no" :maxlength="20"></el-input>
               </el-form-item>
             </m-col>
             <m-col md="6">
@@ -217,7 +217,7 @@
         isOrgLoading: true,
         rules: {
           name: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { required: true, message: '请输入员工姓名', trigger: 'blur' },
             { min: 2, max: 20, message: '长度在2到20个字符', trigger: 'blur' }
           ]
         }
