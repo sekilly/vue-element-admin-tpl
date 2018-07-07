@@ -42,14 +42,24 @@
           <el-table :data="pager.list" border v-loading="isLoading" max-height="100%">
             <el-table-column label="#" type="index"></el-table-column>
             <el-table-column label="姓名" prop="name" header-align="center"></el-table-column>
-            <el-table-column label="登录账号" prop="name" header-align="center"></el-table-column>
-            <el-table-column label="所属机构" prop="name" header-align="center"></el-table-column>
-            <el-table-column label="性别" prop="code" header-align="center"></el-table-column>
-            <el-table-column label="生日" prop="path" header-align="center"></el-table-column>
-            <el-table-column label="电话" prop="phone" header-align="center"></el-table-column>
-            <el-table-column label="邮箱" prop="phone" header-align="center"></el-table-column>
-            <el-table-column label="状态" prop="phone" header-align="center"></el-table-column>
-            <el-table-column label="更新时间" prop="phone" header-align="center"></el-table-column>
+            <!--<el-table-column label="登录账号" prop="name" header-align="center"></el-table-column>-->
+            <el-table-column label="所属机构" prop="org" align="center"></el-table-column>
+            <el-table-column label="性别" prop="sex" align="center">
+              <template slot-scope="scope">
+                <div class="cell" v-if="scope.row.sex === 0">女</div>
+                <div class="cell" v-else-if="scope.row.sex === 1">男</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="生日" prop="birthday" align="center"></el-table-column>
+            <el-table-column label="手机号码" prop="mobile" align="center"></el-table-column>
+            <el-table-column label="邮箱" prop="email" header-align="center"></el-table-column>
+            <el-table-column label="状态" prop="status" align="center">
+              <template slot-scope="scope">
+                <div class="cell" v-if="scope.row.status === 0">正常</div>
+                <div class="cell" v-if="scope.row.status === 2">冻结</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="更新时间" prop="updateTime" align="center"></el-table-column>
             <el-table-column label="操作" align="center">
               <template slot-scope="scope">
                 <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
@@ -93,7 +103,7 @@
               </el-form-item>
             </m-col>
             <m-col md="6">
-              <el-form-item label="电子邮箱：">
+              <el-form-item label="电子邮箱：" prop="email">
                 <el-input v-model="saveBean.email" type="email">
                   <template slot="append"><i class="fa fa-fw fa-envelope"></i></template>
                 </el-input>
@@ -102,15 +112,15 @@
           </m-row>
           <m-row>
             <m-col md="6">
-              <el-form-item label="手机号码：">
-                <el-input v-model="saveBean.mobile">
+              <el-form-item label="手机号码：" prop="mobile">
+                <el-input v-model="saveBean.mobile" :maxlength="11" onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode)))">
                   <template slot="append"><i class="el-icon-mobile-phone"></i></template>
                 </el-input>
               </el-form-item>
             </m-col>
             <m-col md="6">
               <el-form-item label="联系电话：">
-                <el-input v-model="saveBean.phone">
+                <el-input v-model="saveBean.phone" :maxlength="20">
                   <template slot="append"><i class="fa fa-fw fa-phone"></i></template>
                 </el-input>
               </el-form-item>
@@ -128,7 +138,7 @@
             </m-col>
             <m-col md="6">
               <el-form-item label="出生日期：">
-                <el-date-picker v-model="saveBean.birthday" type="date" placeholder="选择日期" style="width: 100%"></el-date-picker>
+                <el-date-picker v-model="saveBean.birthday" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 100%"></el-date-picker>
               </el-form-item>
             </m-col>
           </m-row>
@@ -140,7 +150,7 @@
             </m-col>
             <m-col md="6">
               <el-form-item label="权重(排序)：">
-                <el-input type="number" :controls="false" v-model="saveBean.sort":min="1" :max="999999999"
+                <el-input type="number" :controls="false" v-model="saveBean.sort" :min="1" :max="999999999"
                           onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode)))"
                           placeholder="权重越大排名越靠前，请填写数字。"></el-input>
               </el-form-item>
@@ -219,6 +229,13 @@
           name: [
             { required: true, message: '请输入员工姓名', trigger: 'blur' },
             { min: 2, max: 20, message: '长度在2到20个字符', trigger: 'blur' }
+          ],
+          email: [
+            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+          ],
+          mobile: [
+            { required: true, message: '请输入11位手机号码', trigger: 'blur' },
+            { min: 11, max: 11, message: '请输入11位手机号码', trigger: 'blur' }
           ]
         }
       }
@@ -278,7 +295,7 @@
       getById (id) {
         this.saveFormName = '编辑'
         console.log('getById ==== id = ' + id)
-        this.$http.get(this.global.serverPath + 'org/' + id)
+        this.$http.get(this.global.serverPath + 'user/' + id)
           .then((response) => {
             this.saveFormVisible = true
             this.saveBean = response.data
@@ -300,11 +317,10 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log(this.saveBean)
-            this.$http.post(this.global.serverPath + 'org', this.saveBean, {emulateJSON: true})
+            this.$http.post(this.global.serverPath + 'user', this.saveBean, {emulateJSON: true})
               .then((response) => {
                 this.saveFormVisible = false
                 this.list()
-                this.getOrgTree()
                 // this.$message(response.msg)
               }, (response) => {
                 console.log('error ==== ' + response)
@@ -336,6 +352,7 @@
       saveFormVisible (val, oldVal) {
         if (val === false) {
           this.saveBean = {}
+          this.$refs['saveForm'].resetFields()
           this.saveFormName = '新增'
         }
       }
