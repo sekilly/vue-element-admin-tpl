@@ -113,7 +113,8 @@
           <m-row>
             <m-col md="6">
               <el-form-item label="手机号码：" prop="mobile">
-                <el-input v-model="saveBean.mobile" :maxlength="11" onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode)))">
+                <el-input v-model="saveBean.mobile" :maxlength="11" :disabled="typeof this.saveBean.id !== 'undefined'"
+                          onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode)))">
                   <template slot="append"><i class="el-icon-mobile-phone"></i></template>
                 </el-input>
               </el-form-item>
@@ -138,7 +139,8 @@
             </m-col>
             <m-col md="6">
               <el-form-item label="出生日期：">
-                <el-date-picker v-model="saveBean.birthday" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 100%"></el-date-picker>
+                <el-date-picker v-model="saveBean.birthday" type="date" placeholder="选择日期"
+                                value-format="yyyy-MM-dd" style="width: 100%"></el-date-picker>
               </el-form-item>
             </m-col>
           </m-row>
@@ -299,15 +301,6 @@
           .then((response) => {
             this.saveFormVisible = true
             this.saveBean = response.data
-            var pathArray = this.saveBean.path.split('/')
-            //  删除第一个空字符串 splice第一个参数是从第几个元素开始删除， 第2个参数是删除多少个
-            pathArray.splice(0, 1)
-            //  删除最后一个本身的id
-            pathArray.splice(pathArray.length - 1, 1)
-            if (pathArray.length === 0) {
-              pathArray.push('0')
-            }
-            this.saveBean.pathArray = pathArray
           }, (response) => {
             console.log('error ==== ' + response)
             // return this.$message.warning('222')
