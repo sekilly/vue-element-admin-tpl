@@ -23,16 +23,16 @@
           </div>
         </div>
         <el-aside style="width: 100%; margin-top: 15px">
-          <el-tree :data="orgList"  v-loading="isOrgLoading" @node-click="list" node-key="id" :props="{label:'name'}"></el-tree>
+          <el-tree ref="orgTree" :data="orgList" :highlight-current="true" v-loading="isOrgLoading" @node-click="list" node-key="id" :props="{label:'name'}"></el-tree>
         </el-aside>
       </el-aside>
         <el-main>
           <el-form :inline="true" :model="search"  v-show="searchShow">
-            <el-form-item label="组织名称：">
+            <el-form-item label="姓名：">
               <el-input v-model="search.name"></el-input>
             </el-form-item>
-            <el-form-item label="组织编码：">
-              <el-input v-model="search.code"></el-input>
+            <el-form-item label="手机号码：">
+              <el-input v-model="search.mobile"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="list">查询</el-button>
@@ -43,7 +43,7 @@
             <el-table-column label="#" type="index"></el-table-column>
             <el-table-column label="姓名" prop="name" header-align="center"></el-table-column>
             <!--<el-table-column label="登录账号" prop="name" header-align="center"></el-table-column>-->
-            <el-table-column label="所属机构" prop="org" align="center"></el-table-column>
+            <el-table-column label="所属机构" prop="org.name" align="center"></el-table-column>
             <el-table-column label="性别" prop="sex" align="center">
               <template slot-scope="scope">
                 <div class="cell" v-if="scope.row.sex === 0">女</div>
@@ -55,8 +55,8 @@
             <el-table-column label="邮箱" prop="email" header-align="center"></el-table-column>
             <el-table-column label="状态" prop="status" align="center">
               <template slot-scope="scope">
-                <div class="cell" v-if="scope.row.status === 0">正常</div>
-                <div class="cell" v-if="scope.row.status === 2">冻结</div>
+                <span v-if="scope.row.status === 0">正常</span>
+                <span v-if="scope.row.status === 2">冻结</span>
               </template>
             </el-table-column>
             <el-table-column label="更新时间" prop="updateTime" align="center"></el-table-column>
@@ -132,8 +132,8 @@
             <m-col md="6">
               <el-form-item label="性别：">
                 <el-select v-model="saveBean.sex" placeholder="请选择" style="width: 100%">
-                  <el-option key="1" label="男" value="1"></el-option>
-                  <el-option key="0" label="女" value="0"></el-option>
+                  <el-option key="1" label="男" :value="1"></el-option>
+                  <el-option key="0" label="女" :value="0"></el-option>
                 </el-select>
               </el-form-item>
             </m-col>
@@ -209,7 +209,6 @@
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-
 </style>
 <script>
   export default {
@@ -266,6 +265,11 @@
       },
       list () {
         this.isLoading = true
+        var selectedOrg = this.$refs.orgTree.getCurrentNode()
+        if (selectedOrg !== null) {
+          this.search['org.path'] = selectedOrg.path
+        }
+        console.log(this.search)
         this.$http.get(this.global.serverPath + 'user', {params: this.search}, {emulateJSON: true})
           .then((response) => {
             this.isLoading = false
@@ -299,8 +303,16 @@
         console.log('getById ==== id = ' + id)
         this.$http.get(this.global.serverPath + 'user/' + id)
           .then((response) => {
-            this.saveFormVisible = true
             this.saveBean = response.data
+            console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
+            this.$refs.orgTree.setCurrentKey(this.saveBean.org.id)
+            this.saveFormVisible = true
+            // let selectedOrg = this.$refs.orgTree.getNode(this.saveBean.org.id)
+            //
+            // if (selectedOrg !== null) {
+            //   var pathArray = selectedOrg.path.split('/')
+            //   this.saveBean.pathArray = pathArray
+            // }
           }, (response) => {
             console.log('error ==== ' + response)
             // return this.$message.warning('222')
@@ -326,7 +338,7 @@
         })
       },
       handleChange (val) {
-        this.saveBean.parentId = val[val.length - 1]
+        this.saveBean['org.id'] = val[val.length - 1]
         console.log(this.saveBean)
       },
       getOrgTree () {
@@ -347,6 +359,15 @@
           this.saveBean = {}
           this.$refs['saveForm'].resetFields()
           this.saveFormName = '新增'
+        } else {
+          var selectedOrg = this.$refs.orgTree.getCurrentNode()
+          console.log(selectedOrg)
+          if (selectedOrg !== null) {
+            var pathArray = selectedOrg.path.split('/')
+            this.saveBean.pathArray = pathArray
+          }
+          // console.log(this.$refs.orgTree.getCurrentNode().path)
+          // this.$refs.orgTree.setCurrentNode(this.$refs.orgTree.getCurrentNode())
         }
       }
     }
