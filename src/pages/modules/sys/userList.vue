@@ -88,7 +88,7 @@
           <div class="form-unit">基本信息</div>
           <m-row>
             <m-col md="6">
-              <el-form-item label="上级组织：">
+              <el-form-item label="上级组织：" prop="pathArray">
                 <el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="orgList" style="width: 100%"
                              @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name',disabled:'isLastGrade'}">
                 </el-cascader>
@@ -227,6 +227,9 @@
         isLoading: true,
         isOrgLoading: true,
         rules: {
+          pathArray: [
+            { required: true, message: '请选择所在组织', trigger: 'blur' }
+          ],
           name: [
             { required: true, message: '请输入员工姓名', trigger: 'blur' },
             { min: 2, max: 20, message: '长度在2到20个字符', trigger: 'blur' }
@@ -305,7 +308,9 @@
           .then((response) => {
             this.saveBean = response.data
             // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
-            this.$refs.orgTree.setCurrentKey(this.saveBean.org.id)
+            if (this.saveBean.org != null && this.saveBean.org.id != null) {
+              this.$refs.orgTree.setCurrentKey(this.saveBean.org.id)
+            }
             this.saveFormVisible = true
             // let selectedOrg = this.$refs.orgTree.getNode(this.saveBean.org.id)
             //
@@ -338,7 +343,7 @@
         })
       },
       handleChange (val) {
-        this.saveBean['org.id'] = val[val.length - 1]
+        this.saveBean.org = {id: val[val.length - 1]}
         console.log(this.saveBean)
       },
       getOrgTree () {
