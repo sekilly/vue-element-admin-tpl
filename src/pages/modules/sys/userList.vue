@@ -304,7 +304,7 @@
         this.$http.get(this.global.serverPath + 'user/' + id)
           .then((response) => {
             this.saveBean = response.data
-            console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
+            // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
             this.$refs.orgTree.setCurrentKey(this.saveBean.org.id)
             this.saveFormVisible = true
             // let selectedOrg = this.$refs.orgTree.getNode(this.saveBean.org.id)
