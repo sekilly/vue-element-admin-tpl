@@ -2,7 +2,7 @@
 <div class="page-body">
   <div class="page-header">
     <div class="el-form-item">
-      <label class="el-form-item__label" >用户管理</label>
+      <label class="el-form-item__label" >角色管理</label>
       <div align="right" class="el-form-item__content">
         <!--<a href="/orgAdd" class="m-button m-button-type-plain"><i class="fa fa-plus"></i> 新增</a>-->
         <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>
@@ -12,75 +12,45 @@
   </div>
 
   <div class="box">
-    <el-container style="height: 100%;">
-      <el-aside width="200px">
-        <div class="box-header">
-          <div class="box-title">
-            <i class="fa el-icon-menu"></i> 组织架构
-          </div>
-          <div class="box-tools pull-right">
-            <a href="javascript:void(0)" @click="getOrgTree"><i class="fa fa-refresh"></i></a>
-          </div>
-        </div>
-        <el-aside style="width: 100%; margin-top: 15px">
-          <el-tree ref="orgTree" :data="orgList" :highlight-current="true" v-loading="isOrgLoading" @node-click="list" node-key="id" :props="{label:'name'}"></el-tree>
-        </el-aside>
-      </el-aside>
-        <el-main>
-          <el-form :inline="true" :model="search"  v-show="searchShow">
-            <el-form-item label="姓名：">
-              <el-input v-model="search.name"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号码：">
-              <el-input v-model="search.mobile"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="list">查询</el-button>
-              <el-button plain @click="reset">重置</el-button>
-            </el-form-item>
-          </el-form>
-          <el-table :data="pager.list" border v-loading="isLoading" max-height="100%">
-            <el-table-column label="#" type="index"></el-table-column>
-            <el-table-column label="姓名" prop="name" header-align="center"></el-table-column>
-            <!--<el-table-column label="登录账号" prop="name" header-align="center"></el-table-column>-->
-            <el-table-column label="所属机构" prop="org.name" align="center"></el-table-column>
-            <el-table-column label="性别" prop="sex" align="center">
-              <template slot-scope="scope">
-                <div class="cell" v-if="scope.row.sex === 0">女</div>
-                <div class="cell" v-else-if="scope.row.sex === 1">男</div>
-              </template>
-            </el-table-column>
-            <el-table-column label="生日" prop="birthday" align="center"></el-table-column>
-            <el-table-column label="手机号码" prop="mobile" align="center"></el-table-column>
-            <el-table-column label="邮箱" prop="email" header-align="center"></el-table-column>
-            <el-table-column label="状态" prop="status" align="center">
-              <template slot-scope="scope">
-                <span v-if="scope.row.status === 0">正常</span>
-                <span v-if="scope.row.status === 2">冻结</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="更新时间" prop="updateTime" align="center"></el-table-column>
-            <el-table-column label="操作" align="center">
-              <template slot-scope="scope">
-                <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
-                <a href="javascript:void(0)" @click="frozen(scope.row.id)" title="冻结"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
-                <a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
-              </template>
-            </el-table-column>
-          </el-table>
-          <div class="block" style="margin-top: 10px">
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :page-sizes="[10, 20, 30, 40, 50]"
-              :page-size="pager.pageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="pager.total">
-            </el-pagination>
-          </div>
-        </el-main>
-    </el-container>
-
+    <el-form :inline="true" :model="search"  v-show="searchShow">
+      <el-form-item label="角色名称：">
+        <el-input v-model="search.name"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="list">查询</el-button>
+        <el-button plain @click="reset">重置</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table :data="pager.list" border v-loading="isLoading" max-height="100%">
+      <el-table-column label="#" type="index"></el-table-column>
+      <el-table-column label="角色名称" prop="name" header-align="center"></el-table-column>
+      <el-table-column label="英文名称" prop="enname" header-align="center"></el-table-column>
+      <el-table-column label="是否系统数据" prop="isSys" header-align="center"></el-table-column>
+      <el-table-column label="数据范围" prop="dataScope" header-align="center"></el-table-column>
+      <el-table-column label="状态" prop="status" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status === 0">正常</span>
+          <span v-if="scope.row.status === 2">停用</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="更新时间" prop="updateTime" align="center"></el-table-column>
+      <el-table-column label="操作" align="center">
+        <template slot-scope="scope">
+          <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
+          <a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="block" style="margin-top: 10px">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :page-sizes="[10, 20, 30, 40, 50]"
+        :page-size="pager.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pager.total">
+      </el-pagination>
+    </div>
   </div>
   <el-dialog :title="saveFormName" :visible.sync="saveFormVisible">
     <el-form :model="saveBean" label-width="100px" :rules="rules" ref="saveForm">
@@ -273,7 +243,7 @@
         if (selectedOrg !== null) {
           this.search['org.path'] = selectedOrg.path
         }
-        // console.log(this.search)
+        console.log(this.search)
         this.$http.get(this.global.serverPath + 'user', {params: this.search}, {emulateJSON: true})
           .then((response) => {
             this.isLoading = false
@@ -282,23 +252,6 @@
             this.isLoading = false
             console.log('error ==== ' + response)
           })
-      },
-      frozen (id) {
-        this.$confirm('冻结后不可登录系统，确定冻结该用户吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http.get(this.global.serverPath + 'user/frozen', {params: {'id': id}}, {emulateJSON: true})
-            .then((response) => {
-              this.list()
-              this.$message(response.msg)
-            }, (response) => {
-              console.log('error ==== ' + response)
-            })
-        }).catch(() => {
-          // this.$message('已取消')
-        })
       },
       del (id) {
         console.log('delete ==== id = ' + id)
@@ -310,6 +263,7 @@
           this.$http.delete(this.global.serverPath + 'user', {params: {'id': id}}, {emulateJSON: true})
             .then((response) => {
               this.list()
+              this.getOrgTree()
               this.$message(response.msg)
             }, (response) => {
               console.log('error ==== ' + response)

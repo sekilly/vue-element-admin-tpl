@@ -28,7 +28,7 @@ const actions = {
       setTimeout(() => {
         var user = sessionStorage.getItem('user')
         // console.log(JSON.parse(user))
-        commit('SET_LOGIN_USER', JSON.parse(user))
+        commit('SET_LOGIN_USER', user)
         resolve({bool: true, user})
       }, 1000)
     })

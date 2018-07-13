@@ -58,7 +58,7 @@ Vue.use(MContainer)
 var whiteList = ['demo', 'login']
 router.beforeEach((to, from, next) => {
   // NProgress.start()
-  var token = sessionStorage.getItem('token')
+  var token = sessionStorage.getItem('user')
   if (!token && whiteList.indexOf(to.name) === -1) {
     app && app.$message.warning('未授权，请登陆授权后继续')
     NProgress.done()
@@ -81,35 +81,49 @@ Axios.defaults.validateStatus = status => {
   return status < 500
 }
 // 设置请求token
-Axios.interceptors.request.use(config => {
-  var token = sessionStorage.getItem('token')
-  config.headers['Authorization'] = 'Bearer ' + token
-  // console.log(config)
-  return config
-})
+// Axios.interceptors.request.use(config => {
+//   var token = sessionStorage.getItem('token')
+//   config.headers['Authorization'] = 'Bearer ' + token
+//   // console.log(config)
+//   return config
+// })
 
+Axios.defaults.withCredentials = true
 // 接口错误拦截
 Axios.interceptors.response.use(res => {
-  // console.log(res)
-  if (res.status === 401) {
+  console.log(res.data)
+  // return next({name: 'login'})
+  // if (res.status === 401) {
+  //   app && app.$message({
+  //     type: 'warning',
+  //     message: '登录身份过期，请重新登录。'
+  //   })
+  //   sessionStorage.removeItem('token')
+  //   sessionStorage.removeItem('user')
+  //   router.push({name: 'login'})
+  //   return Promise.reject(new Error('身份过期'))
+  // } else
+  if (res.status === 302) {
     app && app.$message({
       type: 'warning',
-      message: '登录身份过期，请重新登录。'
+      message: '身份过期，请重新登录'
     })
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('user')
     router.push({name: 'login'})
-    return Promise.reject(new Error('身份过期'))
-  } else if (res.data.code !== 0) {
+    return Promise.reject(new Error('身份过期，请重新登录'))
+  } else if (res.data.code === 0) {
+    return res.data
+  } else {
     app && app.$message({
       type: 'warning',
       message: res.data.msg
     })
     return Promise.reject(new Error(res.data))
-  } else {
-    return res.data
   }
 }, err => {
+  console.log('*********************')
+  console.log(err)
   app.$notify.error({
     title: '服务错误',
     message: '服务器响应错误 ' + err.message
