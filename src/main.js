@@ -89,21 +89,16 @@ Axios.defaults.validateStatus = status => {
 // })
 
 Axios.defaults.withCredentials = true
+
+// Axios.interceptors.request.use((config) => {
+//   config.headers['X-Requested-With'] = 'XMLHttpRequest'
+//   return config
+// })
+
 // 接口错误拦截
 Axios.interceptors.response.use(res => {
   console.log(res.data)
-  // return next({name: 'login'})
-  // if (res.status === 401) {
-  //   app && app.$message({
-  //     type: 'warning',
-  //     message: '登录身份过期，请重新登录。'
-  //   })
-  //   sessionStorage.removeItem('token')
-  //   sessionStorage.removeItem('user')
-  //   router.push({name: 'login'})
-  //   return Promise.reject(new Error('身份过期'))
-  // } else
-  if (res.status === 302) {
+  if (res.data.code === -2) {
     app && app.$message({
       type: 'warning',
       message: '身份过期，请重新登录'
