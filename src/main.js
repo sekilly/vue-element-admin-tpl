@@ -99,10 +99,10 @@ Axios.defaults.withCredentials = true
 Axios.interceptors.response.use(res => {
   console.log(res.data)
   if (res.data.code === -2) {
-    app && app.$message({
-      type: 'warning',
-      message: '身份过期，请重新登录'
-    })
+    // app && app.$message({
+    //   type: 'warning',
+    //   message: '身份过期，请重新登录'
+    // })
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('user')
     router.push({name: 'login'})
