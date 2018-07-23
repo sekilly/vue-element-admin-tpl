@@ -45,14 +45,14 @@ export default {
   methods: {
     ...mapActions(['login']),
     handleLogin () {
-      console.log(this.user)
+      // console.log(this.user)
       if (!this.user.loginName || !this.user.password) {
         return this.$message.warning('用户名和密码不能为空')
       }
       this.isLoging = true
       this.$http.post(this.global.serverPath + 'user/login', this.user, {emulateJSON: true})
         .then((response) => {
-          console.log(response)
+          // console.log(response)
           sessionStorage.setItem('user', response.data)
           this.isLoging = false
           this.$message.success('登录成功')
