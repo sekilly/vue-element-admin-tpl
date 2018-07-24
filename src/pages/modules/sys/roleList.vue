@@ -239,10 +239,6 @@
       },
       list () {
         this.isLoading = true
-        var selectedOrg = this.$refs.orgTree.getCurrentNode()
-        if (selectedOrg !== null) {
-          this.search['org.path'] = selectedOrg.path
-        }
         console.log(this.search)
         this.$http.get(this.global.serverPath + 'user', {params: this.search}, {emulateJSON: true})
           .then((response) => {

@@ -63,7 +63,8 @@
             <el-table-column label="操作" align="center">
               <template slot-scope="scope">
                 <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
-                <a href="javascript:void(0)" @click="frozen(scope.row.id)" title="冻结"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
+                <a v-if="scope.row.status === 0" href="javascript:void(0)" @click="frozen(scope.row.id)" title="冻结"><i class="fa fa-ban"></i></a>
+                <a v-if="scope.row.status === 2" href="javascript:void(0)" @click="unfrozen(scope.row.id)" title="解冻"><i class="fa fa-level-up"></i></a>&nbsp;&nbsp;
                 <a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
               </template>
             </el-table-column>
@@ -290,6 +291,23 @@
           type: 'warning'
         }).then(() => {
           this.$http.get(this.global.serverPath + 'user/frozen', {params: {'id': id}}, {emulateJSON: true})
+            .then((response) => {
+              this.list()
+              this.$message(response.msg)
+            }, (response) => {
+              console.log('error ==== ' + response)
+            })
+        }).catch(() => {
+          // this.$message('已取消')
+        })
+      },
+      unfrozen (id) {
+        this.$confirm('确定要解冻该用户吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.get(this.global.serverPath + 'user/unfrozen', {params: {'id': id}}, {emulateJSON: true})
             .then((response) => {
               this.list()
               this.$message(response.msg)

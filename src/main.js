@@ -90,10 +90,10 @@ Axios.defaults.validateStatus = status => {
 
 Axios.defaults.withCredentials = true
 
-// Axios.interceptors.request.use((config) => {
-//   config.headers['X-Requested-With'] = 'XMLHttpRequest'
-//   return config
-// })
+Axios.interceptors.request.use((config) => {
+  config.headers['X-Requested-With'] = 'XMLHttpRequest'
+  return config
+})
 
 // 接口错误拦截
 Axios.interceptors.response.use(res => {
