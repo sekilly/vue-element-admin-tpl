@@ -6,7 +6,7 @@
       <div align="right" class="el-form-item__content">
         <!--<a href="/orgAdd" class="m-button m-button-type-plain"><i class="fa fa-plus"></i> 新增</a>-->
         <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>
-        <m-button plain @click="searchShow = !searchShow" :class="{ hideStyle: !searchShow }"><i class="fa fa-filter"></i> 隐藏</m-button>
+        <m-button plain @click="searchShow = !searchShow" :class="{ hideStyle: !searchShow }"><i class="fa fa-filter"></i> {{searchBtnName}}</m-button>
       </div>
     </div>
   </div>
@@ -24,13 +24,20 @@
     <el-table :data="pager.list" border v-loading="isLoading" max-height="100%">
       <el-table-column label="#" type="index"></el-table-column>
       <el-table-column label="角色名称" prop="name" header-align="center"></el-table-column>
-      <el-table-column label="英文名称" prop="enname" header-align="center"></el-table-column>
-      <el-table-column label="是否系统数据" prop="isSys" header-align="center"></el-table-column>
-      <el-table-column label="数据范围" prop="dataScope" header-align="center"></el-table-column>
-      <el-table-column label="状态" prop="status" align="center">
+      <el-table-column label="角色编码" prop="enname" header-align="center"></el-table-column>
+      <el-table-column label="是否系统数据" prop="isSys" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.status === 0">正常</span>
-          <span v-if="scope.row.status === 2">停用</span>
+          <span v-if="scope.row.isSys">是</span>
+          <span v-else>否</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="数据范围" prop="dataScope" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.dataScope === 1">所有数据</span>
+          <span v-else-if="scope.row.dataScope === 2">所在组织数据</span>
+          <span v-else-if="scope.row.dataScope === 3">所在组织及以下数据</span>
+          <span v-else-if="scope.row.dataScope === 8">仅本人数据</span>
+          <span v-else-if="scope.row.dataScope === 9">按明细设置</span>
         </template>
       </el-table-column>
       <el-table-column label="更新时间" prop="updateTime" align="center"></el-table-column>
@@ -53,96 +60,40 @@
     </div>
   </div>
   <el-dialog :title="saveFormName" :visible.sync="saveFormVisible">
-    <el-form :model="saveBean" label-width="100px" :rules="rules" ref="saveForm">
+    <el-form :model="saveBean" label-width="130px" :rules="rules" ref="saveForm">
       <m-box>
         <m-container fluid >
-          <div class="form-unit">基本信息</div>
           <m-row>
             <m-col md="6">
-              <el-form-item label="上级组织：" prop="pathArray">
-                <el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="orgList" style="width: 100%"
-                             @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name',disabled:'isLastGrade'}">
-                </el-cascader>
-              </el-form-item>
-            </m-col>
-            <m-col md="6"></m-col>
-          </m-row>
-          <m-row>
-            <m-col md="6">
-              <el-form-item label="员工姓名：" prop="name">
+              <el-form-item label="角色名称：" prop="name">
                 <el-input v-model="saveBean.name" :maxlength="20"></el-input>
               </el-form-item>
             </m-col>
             <m-col md="6">
-              <el-form-item label="电子邮箱：" prop="email">
-                <el-input v-model="saveBean.email" type="email">
-                  <template slot="append"><i class="fa fa-fw fa-envelope"></i></template>
-                </el-input>
+              <el-form-item label="角色编码：" prop="enname">
+                <el-input v-model="saveBean.enname"></el-input>
               </el-form-item>
             </m-col>
           </m-row>
           <m-row>
             <m-col md="6">
-              <el-form-item label="手机号码：" prop="mobile">
-                <el-input v-model="saveBean.mobile" :maxlength="11" :disabled="typeof this.saveBean.id !== 'undefined'"
-                          onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode)))">
-                  <template slot="append"><i class="el-icon-mobile-phone"></i></template>
-                </el-input>
-              </el-form-item>
-            </m-col>
-            <m-col md="6">
-              <el-form-item label="联系电话：">
-                <el-input v-model="saveBean.phone" :maxlength="20">
-                  <template slot="append"><i class="fa fa-fw fa-phone"></i></template>
-                </el-input>
-              </el-form-item>
-            </m-col>
-          </m-row>
-          <div class="form-unit">详细信息</div>
-          <m-row>
-            <m-col md="6">
-              <el-form-item label="性别：">
-                <el-select v-model="saveBean.sex" placeholder="请选择" style="width: 100%">
-                  <el-option key="1" label="男" :value="1"></el-option>
-                  <el-option key="0" label="女" :value="0"></el-option>
+              <el-form-item label="数据范围：">
+                <el-select v-model="saveBean.dataScope" placeholder="请选择" style="width: 100%">
+                  <el-option key="1" label="所有数据" :value="1"></el-option>
+                  <el-option key="2" label="所在组织数据" :value="2"></el-option>
+                  <el-option key="3" label="所在组织及以下数据" :value="3"></el-option>
+                  <el-option key="8" label="仅本人数据" :value="8"></el-option>
+                  <el-option key="9" label="按明细设置" :value="9"></el-option>
                 </el-select>
               </el-form-item>
             </m-col>
             <m-col md="6">
-              <el-form-item label="出生日期：">
-                <el-date-picker v-model="saveBean.birthday" type="date" placeholder="选择日期"
-                                value-format="yyyy-MM-dd" style="width: 100%"></el-date-picker>
+              <el-form-item label="是否是系统数据：">
+                <el-tooltip class="item" effect="dark" placement="right">
+                  <div slot="content">“是”代表此数据只有超级管理员能进行修改，<br/>“否”则表示拥有角色修改人员的权限都能进行修改</div>
+                  <el-checkbox v-model="saveBean.isSys"></el-checkbox>
+                </el-tooltip>
               </el-form-item>
-            </m-col>
-          </m-row>
-          <m-row>
-            <m-col md="6">
-              <el-form-item label="员工编号：">
-                <el-input v-model="saveBean.no" :maxlength="20"></el-input>
-              </el-form-item>
-            </m-col>
-            <m-col md="6">
-              <el-form-item label="权重(排序)：">
-                <el-input type="number" :controls="false" v-model="saveBean.sort" :min="1" :max="999999999"
-                          onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode)))"
-                          placeholder="权重越大排名越靠前，请填写数字。"></el-input>
-              </el-form-item>
-            </m-col>
-          </m-row>
-          <m-row>
-            <m-col md="12">
-              <el-form-item label="备注信息：">
-                <el-input type="textarea" :rows="3" v-model="saveBean.remarks" :maxlength="255" resize="none"></el-input>
-              </el-form-item>
-            </m-col>
-          </m-row>
-          <div class="form-unit">配置角色</div>
-          <m-row>
-            <m-col md="6">
-
-            </m-col>
-            <m-col md="6">
-
             </m-col>
           </m-row>
         </m-container>
@@ -194,30 +145,23 @@
         orgList: [],
         searchShow: false,
         saveFormName: '新增',
+        searchBtnName: '搜索',
         saveFormVisible: false,
         isLoading: true,
         isOrgLoading: true,
         rules: {
-          pathArray: [
-            { required: true, message: '请选择所在组织', trigger: 'blur' }
-          ],
           name: [
-            { required: true, message: '请输入员工姓名', trigger: 'blur' },
+            { required: true, message: '请输入角色名称', trigger: 'blur' },
             { min: 2, max: 20, message: '长度在2到20个字符', trigger: 'blur' }
           ],
           email: [
-            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-          ],
-          mobile: [
-            { required: true, message: '请输入11位手机号码', trigger: 'blur' },
-            { min: 11, max: 11, message: '请输入11位手机号码', trigger: 'blur' }
+            { type: 'enname', message: '请输入角色编码', trigger: ['blur', 'change'] }
           ]
         }
       }
     },
     mounted () {
       this.list()
-      this.getOrgTree()
     },
     methods: {
       reset () {
@@ -240,7 +184,7 @@
       list () {
         this.isLoading = true
         console.log(this.search)
-        this.$http.get(this.global.serverPath + 'user', {params: this.search}, {emulateJSON: true})
+        this.$http.get(this.global.serverPath + 'role', {params: this.search}, {emulateJSON: true})
           .then((response) => {
             this.isLoading = false
             this.pager = response.data
@@ -256,7 +200,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'user', {params: {'id': id}}, {emulateJSON: true})
+          this.$http.delete(this.global.serverPath + 'role', {params: {'id': id}}, {emulateJSON: true})
             .then((response) => {
               this.list()
               this.getOrgTree()
@@ -271,7 +215,7 @@
       getById (id) {
         this.saveFormName = '编辑'
         console.log('getById ==== id = ' + id)
-        this.$http.get(this.global.serverPath + 'user/' + id)
+        this.$http.get(this.global.serverPath + 'role/' + id)
           .then((response) => {
             this.saveBean = response.data
             // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
@@ -294,7 +238,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log(this.saveBean)
-            this.$http.post(this.global.serverPath + 'user', this.saveBean, {emulateJSON: true})
+            this.$http.post(this.global.serverPath + 'role', this.saveBean, {emulateJSON: true})
               .then((response) => {
                 this.saveFormVisible = false
                 this.list()
@@ -308,21 +252,6 @@
             return false
           }
         })
-      },
-      handleChange (val) {
-        this.saveBean.org = {id: val[val.length - 1]}
-        console.log(this.saveBean)
-      },
-      getOrgTree () {
-        this.isOrgLoading = true
-        this.$http.get(this.global.serverPath + 'org/tree')
-          .then((response) => {
-            this.isOrgLoading = false
-            this.orgList = response.data
-          }, (response) => {
-            this.isOrgLoading = false
-            console.log('error ==== ' + response)
-          })
       }
     },
     watch: {
@@ -332,14 +261,14 @@
           this.$refs['saveForm'].resetFields()
           this.saveFormName = '新增'
         } else {
-          var selectedOrg = this.$refs.orgTree.getCurrentNode()
-          console.log(selectedOrg)
-          if (selectedOrg !== null) {
-            var pathArray = selectedOrg.path.split('/')
-            this.saveBean.pathArray = pathArray
-          }
-          // console.log(this.$refs.orgTree.getCurrentNode().path)
-          // this.$refs.orgTree.setCurrentNode(this.$refs.orgTree.getCurrentNode())
+
+        }
+      },
+      searchShow (val, oldVal) {
+        if (val === true) {
+          this.searchBtnName = '隐藏'
+        } else {
+          this.searchBtnName = '搜索'
         }
       }
     }

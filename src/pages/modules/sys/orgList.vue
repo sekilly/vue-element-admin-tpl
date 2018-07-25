@@ -6,7 +6,7 @@
       <div align="right" class="el-form-item__content">
         <!--<a href="/orgAdd" class="m-button m-button-type-plain"><i class="fa fa-plus"></i> 新增</a>-->
         <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>
-        <m-button plain @click="searchShow = !searchShow" :class="{ hideStyle: !searchShow }"><i class="fa fa-filter"></i> 隐藏</m-button>
+        <m-button plain @click="searchShow = !searchShow" :class="{ hideStyle: !searchShow }"><i class="fa fa-filter"></i> {{searchBtnName}}</m-button>
       </div>
     </div>
   </div>
@@ -103,6 +103,7 @@
         orgList: [],
         searchShow: false,
         saveFormName: '新增',
+        searchBtnName: '搜索',
         saveFormVisible: false,
         isLoading: true
       }
@@ -214,6 +215,13 @@
         if (val === false) {
           this.saveBean = {pathArray: ['0']}
           this.saveFormName = '新增'
+        }
+      },
+      searchShow (val, oldVal) {
+        if (val === true) {
+          this.searchBtnName = '隐藏'
+        } else {
+          this.searchBtnName = '搜索'
         }
       }
     }
