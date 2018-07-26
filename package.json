@@ -5,7 +5,7 @@
   "author": "Sekilly <sekilly@qq.com>",
   "private": true,
   "app": {
-    "name": "基于Vue的后台管理系统"
+    "name": "后台管理系统"
   },
   "license": "MIT",
   "scripts": {
