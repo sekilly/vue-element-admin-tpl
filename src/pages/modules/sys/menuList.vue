@@ -87,7 +87,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 14px;
+    font-size: 16px;
     padding-right: 8px;
   }
 </style>
@@ -138,10 +138,10 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'role', {params: {'id': data.id}}, {emulateJSON: true})
+          this.$http.delete(this.global.serverPath + 'menu', {params: {'id': data.id}}, {emulateJSON: true})
             .then((response) => {
               this.list()
-              this.getOrgTree()
+              // this.getOrgTree()
               this.$message(response.msg)
             }, (response) => {
               console.log('error ==== ' + response)
@@ -153,7 +153,7 @@
       getById (id) {
         this.saveFormName = '编辑'
         console.log('getById ==== id = ' + id)
-        this.$http.get(this.global.serverPath + 'role/' + id)
+        this.$http.get(this.global.serverPath + 'menu/' + id)
           .then((response) => {
             this.saveBean = response.data
             // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
