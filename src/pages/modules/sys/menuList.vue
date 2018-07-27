@@ -187,7 +187,7 @@
       renderContent (h, { node, data, store }) {
         return (
           <span class="custom-tree-node">
-            <span>{node.label}</span>
+            <span><i class={data.icon}></i> {node.label}</span>
             <span>
               <el-button size="mini" type="text" on-click={ () => this.show(node, data) }><i class="fa fa-plus"></i></el-button>
               <el-button size="mini" type="text" on-click={ () => this.del(node, data) }><i class="el-icon-delete"></i></el-button>
@@ -195,6 +195,7 @@
           </span>)
       },
       show (node, data) {
+        // alert(data.icon)
         this.saveFormVisible = true
       }
     },
