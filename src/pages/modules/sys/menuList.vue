@@ -21,41 +21,92 @@
       </span>-->
     </el-tree>
 
+    <el-table :data="menuTree" style="width: 100%">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-table :data="props.row.children" style="width: 100%">
+            <el-table-column
+              label="菜单名"
+              prop="name">
+            </el-table-column>
+          </el-table>
+          <!--<el-form label-position="left" inline class="demo-table-expand">
+
+            <el-form-item label="商品名称">
+              <span>{{ props.row.name }}</span>
+            </el-form-item>
+
+          </el-form>-->
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="菜单名"
+        prop="name">
+      </el-table-column>
+      <el-table-column
+        label="商品名称"
+        prop="name">
+      </el-table-column>
+      <el-table-column
+        label="描述"
+        prop="desc">
+      </el-table-column>
+    </el-table>
+
+
   </div>
   <el-dialog :title="saveFormName" :visible.sync="saveFormVisible">
-    <el-form :model="saveBean" label-width="130px" :rules="rules" ref="saveForm">
+    <el-form :model="saveBean" label-width="100px" :rules="rules" ref="saveForm">
       <m-box>
         <m-container fluid >
           <m-row>
             <m-col md="6">
-              <el-form-item label="角色名称：" prop="name">
-                <el-input v-model="saveBean.name" :maxlength="20"></el-input>
-              </el-form-item>
-            </m-col>
-            <m-col md="6">
-              <el-form-item label="角色编码：" prop="enname">
-                <el-input v-model="saveBean.enname"></el-input>
+              <el-form-item label="上级菜单：">
+                <el-input v-model="saveBean.icon" :maxlength="20"></el-input>
               </el-form-item>
             </m-col>
           </m-row>
           <m-row>
             <m-col md="6">
-              <el-form-item label="数据范围：">
-                <el-select v-model="saveBean.dataScope" placeholder="请选择" style="width: 100%">
-                  <el-option key="1" label="所有数据" :value="1"></el-option>
-                  <el-option key="2" label="所在组织数据" :value="2"></el-option>
-                  <el-option key="3" label="所在组织及以下数据" :value="3"></el-option>
-                  <el-option key="8" label="仅本人数据" :value="8"></el-option>
-                  <el-option key="9" label="按明细设置" :value="9"></el-option>
-                </el-select>
+              <el-form-item label="菜单名称：" prop="name">
+                <el-input v-model="saveBean.name"></el-input>
               </el-form-item>
             </m-col>
             <m-col md="6">
-              <el-form-item label="是否是系统数据：">
-                <el-tooltip class="item" effect="dark" placement="right">
-                  <div slot="content">“是”代表此数据只有超级管理员能进行修改，<br/>“否”则表示拥有角色修改人员的权限都能进行修改</div>
-                  <el-checkbox v-model="saveBean.isSys"></el-checkbox>
-                </el-tooltip>
+              <el-form-item label="选择图标：">
+                <el-input v-model="saveBean.icon" :maxlength="20"></el-input>
+              </el-form-item>
+            </m-col>
+          </m-row>
+          <m-row>
+            <m-col md="6">
+              <el-form-item label="链接：">
+                <el-input v-model="saveBean.href"></el-input>
+              </el-form-item>
+            </m-col>
+            <!--<m-col md="6">
+              <el-form-item label="目标：">
+                <el-input v-model="saveBean.target"></el-input>
+              </el-form-item>
+            </m-col>-->
+          </m-row>
+          <m-row>
+            <m-col md="6">
+              <el-form-item label="权限标识：">
+                <el-input v-model="saveBean.permission"></el-input>
+              </el-form-item>
+            </m-col>
+            <m-col md="6">
+              <el-form-item label="排序(升序)：">
+                <el-input type="number" :controls="false" v-model="saveBean.sort" :min="1" :max="999999999"
+                          onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
+              </el-form-item>
+            </m-col>
+          </m-row>
+          <m-row>
+            <m-col md="6">
+              <el-form-item label="是否显示：">
+                <el-checkbox v-model="saveBean.isShow"></el-checkbox>
               </el-form-item>
             </m-col>
           </m-row>
@@ -66,7 +117,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="saveFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="save('saveForm')">确 定</el-button>
+      <el-button type="primary" @click="save('saveForm')">保 存</el-button>
     </div>
   </el-dialog>
 </div>
