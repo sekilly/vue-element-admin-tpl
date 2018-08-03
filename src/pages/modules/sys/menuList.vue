@@ -21,7 +21,7 @@
       </span>-->
     </el-tree>
 
-    <el-table :data="menuTree" style="width: 100%">
+    <!--<el-table :data="menuTree" style="width: 100%">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-table :data="props.row.children" style="width: 100%">
@@ -30,13 +30,13 @@
               prop="name">
             </el-table-column>
           </el-table>
-          <!--<el-form label-position="left" inline class="demo-table-expand">
+          &lt;!&ndash;<el-form label-position="left" inline class="demo-table-expand">
 
             <el-form-item label="商品名称">
               <span>{{ props.row.name }}</span>
             </el-form-item>
 
-          </el-form>-->
+          </el-form>&ndash;&gt;
         </template>
       </el-table-column>
       <el-table-column
@@ -51,7 +51,7 @@
         label="描述"
         prop="desc">
       </el-table-column>
-    </el-table>
+    </el-table>-->
 
 
   </div>
