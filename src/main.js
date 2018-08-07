@@ -33,6 +33,7 @@ import MBox from '@/m/box'
 import MBackTop from '@/m/back-top'
 import MLoader from '@/m/loader'
 import MContainer from '@/m/container'
+import TableTree from './m/tableTree'
 
 import global from './Global'
 Vue.prototype.global = global
@@ -53,6 +54,7 @@ Vue.use(MBox)
 Vue.use(MBackTop)
 Vue.use(MLoader)
 Vue.use(MContainer)
+Vue.use(TableTree)
 
 
 var whiteList = ['demo', 'login']
@@ -97,12 +99,18 @@ Axios.interceptors.request.use((config) => {
 
 // 接口错误拦截
 Axios.interceptors.response.use(res => {
-  console.log(res.data)
+  if (res.status !== 200) {
+    app.$notify.error({
+      title: res.status,
+      message: res.statusText
+    })
+    return Promise.reject(res.data)
+  }
   if (res.data.code === -2) {
-    // app && app.$message({
-    //   type: 'warning',
-    //   message: '身份过期，请重新登录'
-    // })
+    app && app.$message({
+      type: 'warning',
+      message: '身份过期，请重新登录'
+    })
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('user')
     router.push({name: 'login'})
@@ -117,8 +125,6 @@ Axios.interceptors.response.use(res => {
     return Promise.reject(new Error(res.data))
   }
 }, err => {
-  console.log('*********************')
-  console.log(err)
   app.$notify.error({
     title: '服务错误',
     message: '服务器响应错误 ' + err.message

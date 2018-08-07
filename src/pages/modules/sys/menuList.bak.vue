@@ -12,7 +12,48 @@
 
   <div class="box">
 
-    <table-tree :columns="columns" :treeStructure="true" :data-source="menuTree" v-loading="isLoading"></table-tree>
+    <el-tree :data="menuTree" :highlight-current="true" v-loading="isLoading" node-key="id" :props="{label:'name'}" :expand-on-click-node="false" default-expand-all :render-content="renderContent">
+      <!--<span class="custom-tree-node" slot-scope="{node, data }">
+        <span>{{ node.id }}</span>
+        <span>
+          <m-button plain type="text" @click="saveFormVisible = true"> <i class="fa fa-plus"></i> dsdsds </m-button>
+        </span>
+      </span>-->
+    </el-tree>
+
+    <table-tree :columns="columns" :tree-structure="true" :data-source="menuTree"></table-tree>
+
+
+    <el-table :data="menuTree" style="width: 100%">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-table :data="props.row.children" style="width: 100%">
+            <el-table-column
+              prop="name">
+            </el-table-column>
+          </el-table>
+          <!--<el-form label-position="left" inline class="demo-table-expand">
+
+            <el-form-item label="商品名称">
+              <span>{{ props.row.name }}</span>
+            </el-form-item>
+
+          </el-form>-->
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="菜单名"
+        prop="name">
+      </el-table-column>
+      <el-table-column
+        label="商品名称"
+        prop="name">
+      </el-table-column>
+      <el-table-column
+        label="描述"
+        prop="desc">
+      </el-table-column>
+    </el-table>
 
 
   </div>
@@ -217,6 +258,21 @@
             return false
           }
         })
+      },
+      renderContent (h, { node, data, store }) {
+        return (
+          <span class="custom-tree-node">
+            <span><i class={data.icon}></i> {data.name}</span>
+            <span>
+              <el-button size="mini" type="text" on-click={ () => this.getById(data) }><i class="el-icon-edit"></i></el-button>
+              <el-button size="mini" type="text" on-click={ () => this.show(node, data) }><i class="fa fa-plus"></i></el-button>
+              <el-button size="mini" type="text" on-click={ () => this.del(node, data) }><i class="el-icon-delete"></i></el-button>
+            </span>
+          </span>)
+      },
+      show (node, data) {
+        // alert(data.icon)
+        this.saveFormVisible = true
       }
     },
     watch: {

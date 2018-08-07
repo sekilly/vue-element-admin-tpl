@@ -1,5 +1,5 @@
 <script type="text/javascript">
-  const serverPath = 'http://127.0.0.1:8088/'
+  const serverPath = '/api/'
   export default{
     serverPath
   }
