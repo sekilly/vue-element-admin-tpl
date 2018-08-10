@@ -8,10 +8,10 @@ function DataTransfer (data) {
 DataTransfer.treeToArray = function (data, parent, level, expandedAll) {
   let tmp = []
   Array.from(data).forEach(function (record) {
-    if (record._expanded === undefined) {
+    if (record._expanded === null || typeof record._expanded === 'undefined') {
       Vue.set(record, '_expanded', expandedAll)
     }
-    if (parent) {
+    if (parent !== null) {
       Vue.set(record, '_parent', parent)
     }
     let _level = 0
@@ -20,9 +20,10 @@ DataTransfer.treeToArray = function (data, parent, level, expandedAll) {
     }
     Vue.set(record, '_level', _level)
     tmp.push(record)
-    if (record.menuBeans && record.menuBeans.length > 0) {
-      let menuBeans = DataTransfer.treeToArray(record.menuBeans, record, _level, expandedAll)
-      tmp = tmp.concat(menuBeans)
+    if (record.children && record.children.length > 0) {
+      let children = DataTransfer.treeToArray(record.children, record, _level, expandedAll)
+      tmp = tmp.concat(children)
+      // console.log('tmp === ' + tmp)
     }
   })
   return tmp

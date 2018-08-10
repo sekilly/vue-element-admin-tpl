@@ -12,7 +12,7 @@
 
   <div class="box">
 
-    <table-tree :columns="columns" :treeStructure="true" :data-source="menuTree" v-loading="isLoading"></table-tree>
+    <table-tree :columns="columns" :treeStructure="true" :data-source="menuTree" requestUrl="menu" ></table-tree>
 
 
   </div>
@@ -165,25 +165,6 @@
             console.log('error ==== ' + response)
           })
       },
-      del (node, data) {
-        console.log('delete ==== data = ' + data.id)
-        this.$confirm('确定删除?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http.delete(this.global.serverPath + 'menu', {params: {'id': data.id}}, {emulateJSON: true})
-            .then((response) => {
-              this.list()
-              // this.getOrgTree()
-              this.$message(response.msg)
-            }, (response) => {
-              console.log('error ==== ' + response)
-            })
-        }).catch(() => {
-          // this.$message('已取消删除')
-        })
-      },
       getById (data) {
         this.saveFormName = '编辑'
         console.log('getById ==== id = ' + data.id)
@@ -216,6 +197,24 @@
             console.log('error submit!!')
             return false
           }
+        })
+      },
+      del (id) {
+        this.$confirm('确定删除?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.delete(this.global.serverPath + this.requestUrl, {params: {'id': id}}, {emulateJSON: true})
+            .then((response) => {
+              this.list()
+              // this.getOrgTree()
+              this.$message(response.msg)
+            }, (response) => {
+              console.log('error ==== ' + response)
+            })
+        }).catch(() => {
+          // this.$message('已取消删除')
         })
       }
     },

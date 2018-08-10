@@ -4,7 +4,7 @@
     border
     style="width: 100%"
     :row-style="showTr">
-    <el-table-column v-for="(column, index) in columns" :key="column.dataIndex" :label="column.text">
+    <el-table-column v-for="(column, index) in columns" :key="column.dataIndex" :label="column.text" header-align="center">
       <template scope="scope">
         <span v-if="spaceIconShow(index)" v-for="(space, levelIndex) in scope.row._level" class="ms-tree-space"></span>
         <span v-if="toggleIconShow(index,scope.row)" @click="toggle(scope.$index)">
@@ -12,10 +12,11 @@
           <i v-if="scope.row._expanded" class="el-icon-caret-bottom" aria-hidden="true"></i>
         </span>
         <span v-else-if="index===0" class="ms-tree-space"></span>
+        <i v-if="column.dataIndex === 'name'" :class=scope.row.icon></i>
         {{scope.row[column.dataIndex]}}
       </template>
     </el-table-column>
-    <el-table-column label="操作" v-if="treeType === 'normal'" width="260">
+    <el-table-column label="操作" v-if="treeType === 'normal'" width="260" align="center">
       <template scope="scope">
         <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;
         &nbsp;<a href="javascript:void(0)" @click="getById(scope.row.id)" title="添加下级"><i class="el-icon-delete"></i></a>&nbsp;
@@ -79,7 +80,7 @@
       // 格式化数据源
       data: function () {
         let me = this
-        console.log('treeStructure === ' + me.treeStructure)
+        // console.log('treeStructure === ' + me.treeStructure)
         if (me.treeStructure) {
           let data = Utils.MSDataTransfer.treeToArray(me.dataSource, null, null, me.defaultExpandAll)
           return data
@@ -89,7 +90,7 @@
     },
     methods: {
       // 显示行
-      showTr: function (row, index) {
+      showTr: function ({row, index}) {
         let show = (row._parent ? (row._parent._expanded && row._parent._show) : true)
         row._show = show
         return show ? '' : 'display:none;'
@@ -98,9 +99,6 @@
       toggle: function (trIndex) {
         let me = this
         let record = me.data[trIndex]
-        console.log('******')
-        console.log(record)
-        console.log('******')
         record._expanded = !record._expanded
       },
       // 显示层级关系的空格和图标
@@ -119,21 +117,22 @@
         }
         return false
       },
-      handleDelete () {
-        this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+      del (id) {
+        this.$confirm('确定删除?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'error'
+          type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          this.$http.delete(this.global.serverPath + this.requestUrl, {params: {'id': id}}, {emulateJSON: true})
+            .then((response) => {
+              this.list()
+              // this.getOrgTree()
+              this.$message(response.msg)
+            }, (response) => {
+              console.log('error ==== ' + response)
+            })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          // this.$message('已取消删除')
         })
       }
     }
