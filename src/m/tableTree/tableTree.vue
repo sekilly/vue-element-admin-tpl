@@ -19,7 +19,7 @@
     <el-table-column label="操作" v-if="treeType === 'normal'" width="260" align="center">
       <template scope="scope">
         <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;
-        &nbsp;<a href="javascript:void(0)" @click="getById(scope.row.id)" title="添加下级"><i class="el-icon-delete"></i></a>&nbsp;
+        &nbsp;<a href="javascript:void(0)" @click="getById(scope.row.id)" title="添加下级"><i class="fa fa-level-down"></i></a>&nbsp;
         &nbsp;<a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
       </template>
     </el-table-column>
@@ -118,22 +118,10 @@
         return false
       },
       del (id) {
-        this.$confirm('确定删除?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http.delete(this.global.serverPath + this.requestUrl, {params: {'id': id}}, {emulateJSON: true})
-            .then((response) => {
-              this.list()
-              // this.getOrgTree()
-              this.$message(response.msg)
-            }, (response) => {
-              console.log('error ==== ' + response)
-            })
-        }).catch(() => {
-          // this.$message('已取消删除')
-        })
+        this.$parent.del(id)
+      },
+      getById (id) {
+        this.$parent.getById(id)
       }
     }
   }

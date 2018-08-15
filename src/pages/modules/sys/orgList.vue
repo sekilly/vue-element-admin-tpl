@@ -51,7 +51,7 @@
   <el-dialog :title="saveFormName" :visible.sync="saveFormVisible">
     <el-form :model="saveBean" label-width="20%">
       <el-form-item label="上级组织：">
-        <el-cascader change-on-select expand-trigger="click" :show-all-levels="false" :options="orgList"
+        <el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="orgList" style="width: 100%"
                      @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name',disabled:'isLastGrade'}">
         </el-cascader>
       </el-form-item>

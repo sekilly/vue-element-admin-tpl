@@ -23,7 +23,10 @@
           <m-row>
             <m-col md="6">
               <el-form-item label="上级菜单：">
-                <el-input v-model="saveBean.icon" :maxlength="20"></el-input>
+                <!--<el-input v-model="saveBean.icon" :maxlength="20"></el-input>-->
+                <el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="menuTree" style="width: 100%"
+                             @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name'}">
+                </el-cascader>
               </el-form-item>
             </m-col>
           </m-row>
@@ -154,6 +157,10 @@
       reset () {
         this.list()
       },
+      handleChange (val) {
+        this.saveBean.parentId = val[val.length - 1]
+        console.log(this.saveBean)
+      },
       list () {
         this.isLoading = true
         this.$http.get(this.global.serverPath + 'menu/tree')
@@ -165,10 +172,10 @@
             console.log('error ==== ' + response)
           })
       },
-      getById (data) {
+      getById (id) {
         this.saveFormName = '编辑'
-        console.log('getById ==== id = ' + data.id)
-        this.$http.get(this.global.serverPath + 'menu/' + data.id)
+        console.log('getById ==== id = ' + id)
+        this.$http.get(this.global.serverPath + 'menu/' + id)
           .then((response) => {
             this.saveBean = response.data
             // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
