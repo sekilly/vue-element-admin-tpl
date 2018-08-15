@@ -12,7 +12,7 @@
 
   <div class="box">
 
-    <table-tree :columns="columns" :treeStructure="true" :data-source="menuTree" requestUrl="menu" ></table-tree>
+    <table-tree :columns="columns" :treeStructure="true" :data-source="menuTree" ></table-tree>
 
 
   </div>
@@ -24,9 +24,10 @@
             <m-col md="6">
               <el-form-item label="上级菜单：">
                 <!--<el-input v-model="saveBean.icon" :maxlength="20"></el-input>-->
-                <el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="menuTree" style="width: 100%"
+                <!--<el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="menuTree" style="width: 100%"
                              @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name'}">
-                </el-cascader>
+                </el-cascader>-->
+                <select-tree :data-source="menuTree" :treeStructure="true"></select-tree>
               </el-form-item>
             </m-col>
           </m-row>

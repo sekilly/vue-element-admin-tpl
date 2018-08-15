@@ -34,6 +34,7 @@ import MBackTop from '@/m/back-top'
 import MLoader from '@/m/loader'
 import MContainer from '@/m/container'
 import TableTree from './m/tableTree'
+import SelectTree from './m/selectTree'
 
 import global from './Global'
 Vue.prototype.global = global
@@ -55,6 +56,7 @@ Vue.use(MBackTop)
 Vue.use(MLoader)
 Vue.use(MContainer)
 Vue.use(TableTree)
+Vue.use(SelectTree)
 
 
 var whiteList = ['demo', 'login']
