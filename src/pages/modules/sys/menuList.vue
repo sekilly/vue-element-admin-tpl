@@ -23,11 +23,11 @@
           <m-row>
             <m-col md="6">
               <el-form-item label="上级菜单：">
-                <!--<el-input v-model="saveBean.icon" :maxlength="20"></el-input>-->
+                <el-input v-model="saveBean.icon" :maxlength="20" @focus="parentMenuFormVisible = true" readonly></el-input>
                 <!--<el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="menuTree" style="width: 100%"
                              @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name'}">
                 </el-cascader>-->
-                <select-tree :data-source="menuTree" :treeStructure="true"></select-tree>
+                <!--<select-tree :data-source="menuTree" :treeStructure="true"></select-tree>-->
               </el-form-item>
             </m-col>
           </m-row>
@@ -77,12 +77,23 @@
           </m-row>
         </m-container>
       </m-box>
-
-
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="saveFormVisible = false">取 消</el-button>
       <el-button type="primary" @click="save('saveForm')">保 存</el-button>
+    </div>
+  </el-dialog>
+  <el-dialog title="选择父级菜单" :visible.sync="parentMenuFormVisible">
+
+      <m-box>
+        <m-container fluid >
+          <el-tree :data="menuTree" :highlight-current="true" node-key="id" :props="{label:'name'}"></el-tree>
+        </m-container>
+      </m-box>
+
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="parentMenuFormVisible = false">取 消</el-button>
+      <el-button type="primary" @click="save('saveForm')">确 定</el-button>
     </div>
   </el-dialog>
 </div>
@@ -139,6 +150,7 @@
         saveFormName: '新增',
         searchBtnName: '搜索',
         saveFormVisible: false,
+        parentMenuFormVisible: false,
         isLoading: true,
         rules: {
           name: [
@@ -159,6 +171,10 @@
         this.list()
       },
       handleChange (val) {
+        this.saveBean.parentId = val[val.length - 1]
+        console.log(this.saveBean)
+      },
+      selectParentMenu (val) {
         this.saveBean.parentId = val[val.length - 1]
         console.log(this.saveBean)
       },
