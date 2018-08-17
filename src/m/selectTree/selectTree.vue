@@ -1,9 +1,12 @@
 <template>
   <div>
-    <el-input placeholder="请选择" icon="caret-bottom" readonly="readonly"
-              v-model="model"
+    <el-input placeholder="请选择"  readonly="readonly"
+              v-model="showLabel"
               @click.native="isShowSelect = !isShowSelect">
+      <i v-if="isShowSelect" slot="suffix" class="el-icon-arrow-up"></i>
+      <i v-else-if="!isShowSelect" slot="suffix" class="el-icon-arrow-down"></i>
     </el-input>
+    <el-input type="hidden" v-model="this.$parent.model"></el-input>
     <el-tree v-if="isShowSelect"
              empty-text="暂无数据"
              :expand-on-click-node="false"
@@ -54,7 +57,8 @@
     },
     data () {
       return {
-        isShowSelect: false
+        isShowSelect: false,
+        showLabel: ''
       }
     },
     methods: {
@@ -62,15 +66,17 @@
       // 点击巡检对象的选择器的树节点
       handleNodeClick (data, Node) {
         // 如果是顶级父节点
-        // if (Node.parent.level === 0) {
-        //   // 不会触发事件
-        // }
-        // else {
-        //   this.formData.inspectObjectName = data.departName;
-        //   this.formData.inspectObject = data.id;
-        //   // 关闭选择器
-        //   this.isShowSelect = false;
-        // }
+        if (Node.parent.level === 0) {
+          // 不会触发事件
+        } else {
+          console.log(this.model)
+          this.$parent.saveBean.parentId = data.id
+          this.showLabel = data.name
+          console.log(this.$parent.saveBean)
+          // this.formData.inspectObject = data.id
+          // 关闭选择器
+          this.isShowSelect = false
+        }
       }
       // 加载树结点
       // loadNode(node, resolve) {

@@ -23,23 +23,7 @@
           <m-row>
             <m-col md="6">
               <el-form-item label="上级菜单：">
-                <!--<el-input v-model="saveBean.icon" :maxlength="20" @focus="parentMenuFormVisible = true" readonly></el-input>-->
-                <!--<el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="menuTree" style="width: 100%"
-                             @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name'}">
-                </el-cascader>-->
                 <select-tree :data="menuTree" model="saveBean.parentId"></select-tree>
-                <!--<el-input placeholder="请选择" suffix-icon="el-cascader__label" readonly="readonly" v-model="saveBean.parentId"
-                          @click.native="isShowSelect = !isShowSelect">
-                </el-input>
-                <el-tree v-if="isShowSelect"
-                         empty-text="暂无数据"
-                         :expand-on-click-node="false"
-                         :data="menuTree"
-                         :props="{id: 'id', label: 'name', children: 'children'}"
-                         highlight-current
-                         @node-click="handleNodeClick"
-                         class="objectTree">
-                </el-tree>-->
               </el-form-item>
             </m-col>
           </m-row>
