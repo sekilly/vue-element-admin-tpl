@@ -23,11 +23,23 @@
           <m-row>
             <m-col md="6">
               <el-form-item label="上级菜单：">
-                <el-input v-model="saveBean.icon" :maxlength="20" @focus="parentMenuFormVisible = true" readonly></el-input>
+                <!--<el-input v-model="saveBean.icon" :maxlength="20" @focus="parentMenuFormVisible = true" readonly></el-input>-->
                 <!--<el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="menuTree" style="width: 100%"
                              @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name'}">
                 </el-cascader>-->
-                <!--<select-tree :data-source="menuTree" :treeStructure="true"></select-tree>-->
+                <select-tree :data="menuTree" model="saveBean.parentId"></select-tree>
+                <!--<el-input placeholder="请选择" suffix-icon="el-cascader__label" readonly="readonly" v-model="saveBean.parentId"
+                          @click.native="isShowSelect = !isShowSelect">
+                </el-input>
+                <el-tree v-if="isShowSelect"
+                         empty-text="暂无数据"
+                         :expand-on-click-node="false"
+                         :data="menuTree"
+                         :props="{id: 'id', label: 'name', children: 'children'}"
+                         highlight-current
+                         @node-click="handleNodeClick"
+                         class="objectTree">
+                </el-tree>-->
               </el-form-item>
             </m-col>
           </m-row>
@@ -83,19 +95,7 @@
       <el-button type="primary" @click="save('saveForm')">保 存</el-button>
     </div>
   </el-dialog>
-  <el-dialog title="选择父级菜单" :visible.sync="parentMenuFormVisible">
 
-      <m-box>
-        <m-container fluid >
-          <el-tree :data="menuTree" :highlight-current="true" node-key="id" :props="{label:'name'}"></el-tree>
-        </m-container>
-      </m-box>
-
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="parentMenuFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="save('saveForm')">确 定</el-button>
-    </div>
-  </el-dialog>
 </div>
 </template>
 <style>
@@ -150,7 +150,7 @@
         saveFormName: '新增',
         searchBtnName: '搜索',
         saveFormVisible: false,
-        parentMenuFormVisible: false,
+        isShowSelect: false,
         isLoading: true,
         rules: {
           name: [
@@ -195,7 +195,15 @@
         this.$http.get(this.global.serverPath + 'menu/' + id)
           .then((response) => {
             this.saveBean = response.data
-            // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
+            var pathArray = this.saveBean.path.split('/')
+            //  删除第一个空字符串 splice第一个参数是从第几个元素开始删除， 第2个参数是删除多少个
+            pathArray.splice(0, 1)
+            //  删除最后一个本身的id
+            pathArray.splice(pathArray.length - 1, 1)
+            if (pathArray.length === 0) {
+              pathArray.push('0')
+            }
+            this.saveBean.pathArray = pathArray
             if (this.saveBean.org != null && this.saveBean.org.id != null) {
               this.$refs.orgTree.setCurrentKey(this.saveBean.org.id)
             }
@@ -240,6 +248,18 @@
         }).catch(() => {
           // this.$message('已取消删除')
         })
+      },
+      handleNodeClick (data, Node) {
+        // 如果是顶级父节点
+        // if (Node.parent.level === 0) {
+        //   // 不会触发事件
+        // }
+        // else {
+        //   this.formData.inspectObjectName = data.departName;
+        //   this.formData.inspectObject = data.id;
+        //   // 关闭选择器
+        //   this.isShowSelect = false;
+        // }
       }
     },
     watch: {
