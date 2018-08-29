@@ -23,7 +23,10 @@
           <m-row>
             <m-col md="6">
               <el-form-item label="上级菜单：">
-                <select-tree :data="menuTree" model="saveBean.parentId"></select-tree>
+                <!--<select-tree :data="menuTree" model="saveBean.parentId"></select-tree>-->
+                <el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="menuTree" style="width: 100%"
+                             @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name'}">
+                </el-cascader>
               </el-form-item>
             </m-col>
           </m-row>
@@ -134,15 +137,11 @@
         saveFormName: '新增',
         searchBtnName: '搜索',
         saveFormVisible: false,
-        isShowSelect: false,
         isLoading: true,
         rules: {
           name: [
-            { required: true, message: '请输入角色名称', trigger: 'blur' },
+            { required: true, message: '请输入菜单名称', trigger: 'blur' },
             { min: 2, max: 20, message: '长度在2到20个字符', trigger: 'blur' }
-          ],
-          email: [
-            { type: 'enname', message: '请输入角色编码', trigger: ['blur', 'change'] }
           ]
         }
       }
@@ -173,10 +172,10 @@
             console.log('error ==== ' + response)
           })
       },
-      getById (id) {
+      getById (obj) {
         this.saveFormName = '编辑'
-        console.log('getById ==== id = ' + id)
-        this.$http.get(this.global.serverPath + 'menu/' + id)
+        console.log('getById ==== id = ' + obj.id)
+        this.$http.get(this.global.serverPath + 'menu/' + obj.id)
           .then((response) => {
             this.saveBean = response.data
             var pathArray = this.saveBean.path.split('/')
@@ -196,11 +195,20 @@
             console.log('error ==== ' + response)
           })
       },
+      addChild (obj) {
+        this.saveFormName = '添加下级'
+        var pathArray = obj.path.split('/')
+        //  删除第一个空字符串 splice第一个参数是从第几个元素开始删除， 第2个参数是删除多少个
+        pathArray.splice(0, 1)
+        this.saveBean.pathArray = pathArray
+        this.saveBean.sort = (obj.children.length + 1) * 10
+        this.saveFormVisible = true
+      },
       save (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log(this.saveBean)
-            this.$http.post(this.global.serverPath + 'role', this.saveBean, {emulateJSON: true})
+            this.$http.post(this.global.serverPath + 'menu', this.saveBean, {emulateJSON: true})
               .then((response) => {
                 this.saveFormVisible = false
                 this.list()
@@ -215,13 +223,13 @@
           }
         })
       },
-      del (id) {
+      del (obj) {
         this.$confirm('确定删除?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + this.requestUrl, {params: {'id': id}}, {emulateJSON: true})
+          this.$http.delete(this.global.serverPath + this.requestUrl, {params: {'id': obj.id}}, {emulateJSON: true})
             .then((response) => {
               this.list()
               // this.getOrgTree()
@@ -232,18 +240,6 @@
         }).catch(() => {
           // this.$message('已取消删除')
         })
-      },
-      handleNodeClick (data, Node) {
-        // 如果是顶级父节点
-        // if (Node.parent.level === 0) {
-        //   // 不会触发事件
-        // }
-        // else {
-        //   this.formData.inspectObjectName = data.departName;
-        //   this.formData.inspectObject = data.id;
-        //   // 关闭选择器
-        //   this.isShowSelect = false;
-        // }
       }
     },
     watch: {

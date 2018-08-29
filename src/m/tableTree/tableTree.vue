@@ -18,9 +18,9 @@
     </el-table-column>
     <el-table-column label="操作" v-if="treeType === 'normal'" width="260" align="center">
       <template scope="scope">
-        <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;
-        &nbsp;<a href="javascript:void(0)" @click="getById(scope.row.id)" title="添加下级"><i class="fa fa-level-down"></i></a>&nbsp;
-        &nbsp;<a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
+        <a href="javascript:void(0)" @click="getById(scope.row)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;
+        &nbsp;<a href="javascript:void(0)" @click="addChild(scope.row)" title="添加下级"><i class="fa fa-level-down"></i></a>&nbsp;
+        &nbsp;<a href="javascript:void(0)" @click="del(scope.row)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
       </template>
     </el-table-column>
   </el-table>
@@ -117,11 +117,14 @@
         }
         return false
       },
-      del (id) {
-        this.$parent.del(id)
+      del (obj) {
+        this.$parent.del(obj)
       },
-      getById (id) {
-        this.$parent.getById(id)
+      getById (obj) {
+        this.$parent.getById(obj)
+      },
+      addChild (obj) {
+        this.$parent.addChild(obj)
       }
     }
   }
