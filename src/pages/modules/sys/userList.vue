@@ -169,11 +169,10 @@
           </m-row>
           <div class="form-unit">配置角色</div>
           <m-row>
-            <m-col md="6">
-
-            </m-col>
-            <m-col md="6">
-
+            <m-col md="12">
+             <!-- <el-checkbox-group v-model="saveBean.roleList.id">
+                <el-checkbox v-for="(role, index) in roleList" :label="role.name" :key="role.id"></el-checkbox>
+              </el-checkbox-group>-->
             </m-col>
           </m-row>
         </m-container>
@@ -223,6 +222,7 @@
         pager: {},
         saveBean: {},
         orgList: [],
+        roleList: [{id: ''}],
         searchShow: false,
         saveFormName: '新增',
         searchBtnName: '搜索',
@@ -250,6 +250,7 @@
     mounted () {
       this.list()
       this.getOrgTree()
+      this.getRoleList()
     },
     methods: {
       reset () {
@@ -387,9 +388,20 @@
         this.$http.get(this.global.serverPath + 'org/tree')
           .then((response) => {
             this.isOrgLoading = false
-            this.orgList = response.data
+            this.orgList.push({id: '0', 'name': '全部'})
+            for (var index in response.data) {
+              this.orgList.push(response.data[index])
+            }
           }, (response) => {
             this.isOrgLoading = false
+            console.log('error ==== ' + response)
+          })
+      },
+      getRoleList () {
+        this.$http.get(this.global.serverPath + 'role/all')
+          .then((response) => {
+            this.roleList = response.data
+          }, (response) => {
             console.log('error ==== ' + response)
           })
       }
@@ -403,7 +415,7 @@
         } else {
           var selectedOrg = this.$refs.orgTree.getCurrentNode()
           console.log(selectedOrg)
-          if (selectedOrg !== null) {
+          if (selectedOrg !== null && selectedOrg.id !== '0') {
             var pathArray = selectedOrg.path.split('/')
             this.saveBean.pathArray = pathArray
           }
