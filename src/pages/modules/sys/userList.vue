@@ -170,9 +170,9 @@
           <div class="form-unit">配置角色</div>
           <m-row>
             <m-col md="12">
-             <!-- <el-checkbox-group v-model="saveBean.roleList.id">
-                <el-checkbox v-for="(role, index) in roleList" :label="role.name" :key="role.id"></el-checkbox>
-              </el-checkbox-group>-->
+              <el-checkbox-group v-model="saveBean.roleIdList">
+                <el-checkbox v-for="(role, index) in roleList" :label="role.id" :key="role.id">{{role.name}}</el-checkbox>
+              </el-checkbox-group>
             </m-col>
           </m-row>
         </m-container>
@@ -220,9 +220,11 @@
           'page.pageSize': 10
         },
         pager: {},
-        saveBean: {},
+        saveBean: {
+          roleIdList: []
+        },
         orgList: [],
-        roleList: [{id: ''}],
+        roleList: [],
         searchShow: false,
         saveFormName: '新增',
         searchBtnName: '搜索',
@@ -248,8 +250,8 @@
       }
     },
     mounted () {
-      this.list()
       this.getOrgTree()
+      this.list()
       this.getRoleList()
     },
     methods: {
@@ -340,9 +342,9 @@
       },
       getById (id) {
         this.saveFormName = '编辑'
-        console.log('getById ==== id = ' + id)
         this.$http.get(this.global.serverPath + 'user/' + id)
           .then((response) => {
+            console.log(response.data)
             this.saveBean = response.data
             // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
             if (this.saveBean.org != null && this.saveBean.org.id != null) {

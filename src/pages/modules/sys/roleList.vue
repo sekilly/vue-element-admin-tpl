@@ -44,6 +44,7 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
+          <a href="javascript:void(0)" @click="getById(scope.row.id)" title="配置菜单"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
           <a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
         </template>
       </el-table-column>
