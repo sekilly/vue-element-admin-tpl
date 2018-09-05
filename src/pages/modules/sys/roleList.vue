@@ -64,6 +64,7 @@
     <el-form :model="saveBean" label-width="130px" :rules="rules" ref="saveForm">
       <m-box>
         <m-container fluid >
+          <div class="form-unit">基本信息</div>
           <m-row>
             <m-col md="6">
               <el-form-item label="角色名称：" prop="name">
@@ -94,6 +95,19 @@
                   <div slot="content">“是”代表此数据只有超级管理员能进行修改，<br/>“否”则表示拥有角色修改人员的权限都能进行修改</div>
                   <el-checkbox v-model="saveBean.isSys"></el-checkbox>
                 </el-tooltip>
+              </el-form-item>
+            </m-col>
+          </m-row>
+          <div class="form-unit">角色授权</div>
+          <m-row>
+            <m-col md="6">
+              <el-form-item>
+                <el-tree ref="menuTree" show-checkbox default-expand-all :data="menuTree" :highlight-current="true"  node-key="id" :props="{value:'id',label:'name'}"></el-tree>
+              </el-form-item>
+            </m-col>
+            <m-col md="6" >
+              <el-form-item >
+                <el-tree ref="orgTree" v-if="saveBean.dataScope === 9" show-checkbox default-expand-all :data="orgList" :highlight-current="true"  node-key="id" :props="{value:'id',label:'name'}"></el-tree>
               </el-form-item>
             </m-col>
           </m-row>
@@ -144,6 +158,7 @@
         pager: {},
         saveBean: {},
         orgList: [],
+        menuTree: [],
         searchShow: false,
         saveFormName: '新增',
         searchBtnName: '搜索',
@@ -163,6 +178,8 @@
     },
     mounted () {
       this.list()
+      this.getMenuTree()
+      this.getOrgTree()
     },
     methods: {
       reset () {
@@ -215,21 +232,17 @@
       },
       getById (id) {
         this.saveFormName = '编辑'
-        console.log('getById ==== id = ' + id)
         this.$http.get(this.global.serverPath + 'role/' + id)
           .then((response) => {
             this.saveBean = response.data
             // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
-            if (this.saveBean.org != null && this.saveBean.org.id != null) {
-              this.$refs.orgTree.setCurrentKey(this.saveBean.org.id)
-            }
             this.saveFormVisible = true
-            // let selectedOrg = this.$refs.orgTree.getNode(this.saveBean.org.id)
-            //
-            // if (selectedOrg !== null) {
-            //   var pathArray = selectedOrg.path.split('/')
-            //   this.saveBean.pathArray = pathArray
-            // }
+            document.r
+            this.$refs.menuTree.setCheckedKeys(this.saveBean.menuIdList)
+
+            if (this.saveBean.dataScope === 9) {
+              this.$refs.orgTree.setCheckedKeys(this.saveBean.orgIdList)
+            }
           }, (response) => {
             console.log('error ==== ' + response)
             // return this.$message.warning('222')
@@ -239,6 +252,10 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log(this.saveBean)
+            this.saveBean.menuIdList = this.$refs.menuTree.getCheckedKeys()
+            if (this.saveBean.dataScope === 9) {
+              this.saveBean.orgIdList = this.$refs.orgTree.getCheckedKeys()
+            }
             this.$http.post(this.global.serverPath + 'role', this.saveBean, {emulateJSON: true})
               .then((response) => {
                 this.saveFormVisible = false
@@ -253,12 +270,30 @@
             return false
           }
         })
+      },
+      getOrgTree () {
+        this.$http.get(this.global.serverPath + 'org/tree')
+          .then((response) => {
+            this.orgList = response.data
+          }, (response) => {
+            console.log('error ==== ' + response)
+          })
+      },
+      getMenuTree () {
+        this.$http.get(this.global.serverPath + 'menu/tree')
+          .then((response) => {
+            this.menuTree = response.data
+          }, (response) => {
+            console.log('error ==== ' + response)
+          })
       }
     },
     watch: {
       saveFormVisible (val, oldVal) {
         if (val === false) {
           this.saveBean = {}
+          this.$refs.menuTree.setCheckedKeys([])
+          this.$refs.orgTree.setCheckedKeys([])
           this.$refs['saveForm'].resetFields()
           this.saveFormName = '新增'
         } else {
