@@ -390,6 +390,7 @@
         this.$http.get(this.global.serverPath + 'org/tree')
           .then((response) => {
             this.isOrgLoading = false
+            this.orgList = []
             this.orgList.push({id: '0', 'name': '全部'})
             for (var index in response.data) {
               this.orgList.push(response.data[index])

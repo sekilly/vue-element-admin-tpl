@@ -44,7 +44,6 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
-          <a href="javascript:void(0)" @click="getById(scope.row.id)" title="配置菜单"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
           <a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
         </template>
       </el-table-column>
@@ -102,12 +101,12 @@
           <m-row>
             <m-col md="6">
               <el-form-item>
-                <el-tree ref="menuTree" show-checkbox default-expand-all :data="menuTree" :highlight-current="true"  node-key="id" :props="{value:'id',label:'name'}"></el-tree>
+                <el-tree ref="menuTree" v-if="saveFormVisible" show-checkbox default-expand-all :default-checked-keys="saveBean.menuIdList" :data="menuTree" :highlight-current="true"  node-key="id" :props="{value:'id',label:'name'}"></el-tree>
               </el-form-item>
             </m-col>
             <m-col md="6" >
               <el-form-item >
-                <el-tree ref="orgTree" v-if="saveBean.dataScope === 9" show-checkbox default-expand-all :data="orgList" :highlight-current="true"  node-key="id" :props="{value:'id',label:'name'}"></el-tree>
+                <el-tree ref="orgTree" v-if="saveBean.dataScope === 9" show-checkbox default-expand-all :default-checked-keys="saveBean.orgIdList" :data="orgList" :highlight-current="true"  node-key="id" :props="{value:'id',label:'name'}"></el-tree>
               </el-form-item>
             </m-col>
           </m-row>
@@ -235,14 +234,9 @@
         this.$http.get(this.global.serverPath + 'role/' + id)
           .then((response) => {
             this.saveBean = response.data
-            // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
             this.saveFormVisible = true
-            document.r
-            this.$refs.menuTree.setCheckedKeys(this.saveBean.menuIdList)
-
-            if (this.saveBean.dataScope === 9) {
-              this.$refs.orgTree.setCheckedKeys(this.saveBean.orgIdList)
-            }
+            // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
+            // this.$refs.menuTree.setCheckedKeys(this.saveBean.menuIdList)
           }, (response) => {
             console.log('error ==== ' + response)
             // return this.$message.warning('222')
@@ -251,16 +245,20 @@
       save (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(this.saveBean)
             this.saveBean.menuIdList = this.$refs.menuTree.getCheckedKeys()
             if (this.saveBean.dataScope === 9) {
               this.saveBean.orgIdList = this.$refs.orgTree.getCheckedKeys()
             }
+            this.saveBean.menuList = null
+            this.saveBean.menuIds = null
+            this.saveBean.orgList = null
+            this.saveBean.orgIds = null
+            console.log(this.saveBean)
             this.$http.post(this.global.serverPath + 'role', this.saveBean, {emulateJSON: true})
               .then((response) => {
                 this.saveFormVisible = false
                 this.list()
-                // this.$message(response.msg)
+                this.$message(response.msg)
               }, (response) => {
                 console.log('error ==== ' + response)
                 // return this.$message.warning('222')
@@ -291,10 +289,10 @@
     watch: {
       saveFormVisible (val, oldVal) {
         if (val === false) {
+          this.saveBean = null
           this.saveBean = {}
-          this.$refs.menuTree.setCheckedKeys([])
-          this.$refs.orgTree.setCheckedKeys([])
           this.$refs['saveForm'].resetFields()
+          this.$refs.menuTree.setCheckedKeys([])
           this.saveFormName = '新增'
         } else {
 
