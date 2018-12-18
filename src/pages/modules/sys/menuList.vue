@@ -448,7 +448,7 @@
       },
       list () {
         this.isLoading = true
-        this.$http.get(this.global.serverPath + 'menu/tree')
+        this.$http.get(this.global.serverPath + 'menu/tree?permissionMenu=true')
           .then((response) => {
             this.isLoading = false
             this.menuTree = response.data
