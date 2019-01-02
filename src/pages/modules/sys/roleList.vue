@@ -83,8 +83,8 @@
                   <el-option key="1" label="所有数据" :value="1"></el-option>
                   <el-option key="2" label="所在组织数据" :value="2"></el-option>
                   <el-option key="3" label="所在组织及以下数据" :value="3"></el-option>
-                  <el-option key="8" label="仅本人数据" :value="8"></el-option>
-                  <el-option key="9" label="按明细设置" :value="9"></el-option>
+                  <el-option key="4" label="仅本人数据" :value="8"></el-option>
+                  <el-option key="5" label="按明细设置" :value="9"></el-option>
                 </el-select>
               </el-form-item>
             </m-col>

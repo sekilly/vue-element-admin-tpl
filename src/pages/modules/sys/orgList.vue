@@ -93,8 +93,8 @@
     data: function () {
       return {
         search: {
-          'page.pageNum': 1,
-          'page.pageSize': 10
+          pageNum: 1,
+          pageSize: 10
         },
         pager: {},
         saveBean: {
@@ -115,23 +115,23 @@
     methods: {
       reset () {
         this.search = {
-          'page.pageNum': 1,
-          'page.pageSize': 10
+          pageNum: 1,
+          pageSize: 10
         }
         this.list()
       },
       handleSizeChange (val) {
         console.log(`每页 ${val} 条`)
-        this.search['page.pageSize'] = val
+        this.search.pageSize = val
         this.list()
       },
       handleCurrentChange (val) {
         console.log(`当前页: ${val}`)
-        this.search['page.pageNum'] = val
+        this.search.pageNum = val
         this.list()
       },
       list () {
-        this.$http.get(this.global.serverPath + 'org', {params: this.search}, {emulateJSON: true})
+        this.$http.get(this.global.serverPath + 'organization', {params: this.search}, {emulateJSON: true})
           .then((response) => {
             this.isLoading = false
             this.pager = response.data
@@ -147,7 +147,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'org', {params: {'id': id}}, {emulateJSON: true})
+          this.$http.delete(this.global.serverPath + 'organization', {params: {'id': id}}, {emulateJSON: true})
             .then((response) => {
               this.list()
               this.getOrgTree()
@@ -162,7 +162,7 @@
       getById (id) {
         this.saveFormName = '编辑'
         console.log('getById ==== id = ' + id)
-        this.$http.get(this.global.serverPath + 'org/' + id)
+        this.$http.get(this.global.serverPath + 'organization/' + id)
           .then((response) => {
             this.saveFormVisible = true
             this.saveBean = response.data
@@ -182,7 +182,7 @@
       },
       save () {
         console.log(this.saveBean)
-        this.$http.post(this.global.serverPath + 'org', this.saveBean, {emulateJSON: true})
+        this.$http.post(this.global.serverPath + 'organization', this.saveBean, {emulateJSON: true})
           .then((response) => {
             this.saveFormVisible = false
             this.list()
@@ -198,7 +198,7 @@
         console.log(this.saveBean)
       },
       getOrgTree () {
-        this.$http.get(this.global.serverPath + 'org/tree')
+        this.$http.get(this.global.serverPath + 'organization/tree')
           .then((response) => {
             this.orgList = []
             this.orgList.push({'id': '0', 'name': '根节点'})

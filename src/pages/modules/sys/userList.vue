@@ -32,7 +32,7 @@
               <el-input v-model="search.name"></el-input>
             </el-form-item>
             <el-form-item label="手机号码：">
-              <el-input v-model="search.mobile"></el-input>
+              <el-input v-model="search.mobilePhone"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="list">查询</el-button>
@@ -51,7 +51,7 @@
               </template>
             </el-table-column>
             <el-table-column label="生日" prop="birthday" align="center"></el-table-column>
-            <el-table-column label="手机号码" prop="mobile" align="center"></el-table-column>
+            <el-table-column label="手机号码" prop="mobilePhone" align="center"></el-table-column>
             <el-table-column label="邮箱" prop="email" header-align="center"></el-table-column>
             <el-table-column label="状态" prop="status" align="center">
               <template slot-scope="scope">
@@ -114,8 +114,8 @@
           </m-row>
           <m-row>
             <m-col md="6">
-              <el-form-item label="手机号码：" prop="mobile">
-                <el-input v-model="saveBean.mobile" :maxlength="11" :disabled="typeof this.saveBean.id !== 'undefined'"
+              <el-form-item label="手机号码：" prop="mobilePhone">
+                <el-input v-model="saveBean.mobilePhone" :maxlength="11" :disabled="typeof this.saveBean.id !== 'undefined'"
                           onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode)))">
                   <template slot="append"><i class="el-icon-mobile-phone"></i></template>
                 </el-input>
@@ -216,8 +216,8 @@
     data: function () {
       return {
         search: {
-          'page.pageNum': 1,
-          'page.pageSize': 10
+          pageNum: 1,
+          pageSize: 10
         },
         pager: {},
         saveBean: {
@@ -242,7 +242,7 @@
           email: [
             { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
           ],
-          mobile: [
+          mobilePhone: [
             { required: true, message: '请输入11位手机号码', trigger: 'blur' },
             { min: 11, max: 11, message: '请输入11位手机号码', trigger: 'blur' }
           ]
@@ -257,19 +257,19 @@
     methods: {
       reset () {
         this.search = {
-          'page.pageNum': 1,
-          'page.pageSize': 10
+          pageNum: 1,
+          pageSize: 10
         }
         this.list()
       },
       handleSizeChange (val) {
         console.log(`每页 ${val} 条`)
-        this.search['page.pageSize'] = val
+        this.search.pageSize = val
         this.list()
       },
       handleCurrentChange (val) {
         console.log(`当前页: ${val}`)
-        this.search['page.pageNum'] = val
+        this.search.pageNum = val
         this.list()
       },
       list () {
@@ -387,7 +387,7 @@
       },
       getOrgTree () {
         this.isOrgLoading = true
-        this.$http.get(this.global.serverPath + 'org/tree')
+        this.$http.get(this.global.serverPath + 'organization/tree')
           .then((response) => {
             this.isOrgLoading = false
             this.orgList = []
