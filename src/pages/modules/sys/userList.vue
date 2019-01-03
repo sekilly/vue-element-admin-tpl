@@ -261,6 +261,7 @@
           pageNum: 1,
           pageSize: 10
         }
+        this.$refs.orgTree.setCurrentNode('')
         this.list()
       },
       handleSizeChange (val) {
@@ -347,8 +348,10 @@
           .then((response) => {
             console.log(response.data)
             this.saveBean = response.data
-            if (this.saveBean.organization != null && this.saveBean.organization.id != null) {
-              this.$refs.orgTree.setCurrentKey(this.saveBean.organization.id)
+            if (this.saveBean.organization != null && this.saveBean.organization.path != null) {
+              var pathArray = this.saveBean.organization.path.split('/')
+              this.saveBean.pathArray = pathArray
+              // this.$refs.orgTree.setCurrentKey(this.saveBean.organization.id)
             }
             this.saveFormVisible = true
           }, (response) => {
@@ -408,14 +411,12 @@
           this.$refs['saveForm'].resetFields()
           this.saveFormName = '新增'
         } else {
-          var selectedOrg = this.$refs.orgTree.getCurrentNode()
-          console.log(selectedOrg)
-          if (selectedOrg !== null && selectedOrg.id !== '0') {
-            var pathArray = selectedOrg.path.split('/')
-            this.saveBean.pathArray = pathArray
-          }
-          // console.log(this.$refs.orgTree.getCurrentNode().path)
-          // this.$refs.orgTree.setCurrentNode(this.$refs.orgTree.getCurrentNode())
+          // var selectedOrg = this.$refs.orgTree.getCurrentNode()
+          // console.log(selectedOrg)
+          // if (selectedOrg !== null && selectedOrg.id !== '0') {
+          //   var pathArray = selectedOrg.path.split('/')
+          //   this.saveBean.pathArray = pathArray
+          // }
         }
       },
       searchShow (val, oldVal) {
