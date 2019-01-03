@@ -3,11 +3,7 @@
   <div class="page-header">
     <div class="el-form-item">
       <label class="el-form-item__label" >用户管理</label>
-      <div align="right" class="el-form-item__content">
-        <!--<a href="/orgAdd" class="m-button m-button-type-plain"><i class="fa fa-plus"></i> 新增</a>-->
-        <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>
-        <m-button plain @click="searchShow = !searchShow" :class="{ hideStyle: !searchShow }"><i class="fa fa-filter"></i> {{searchBtnName}}</m-button>
-      </div>
+
     </div>
   </div>
 
@@ -27,6 +23,11 @@
         </el-aside>
       </el-aside>
         <el-main>
+          <div align="left" class="el-form-item__content" style="margin-bottom: 5px">
+            <!--<a href="/orgAdd" class="m-button m-button-type-plain"><i class="fa fa-plus"></i> 新增</a>-->
+            <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>
+            <m-button plain @click="searchShow = !searchShow" :class="{ hideStyle: !searchShow }"><i class="fa fa-filter"></i> {{searchBtnName}}</m-button>
+          </div>
           <el-form :inline="true" :model="search"  v-show="searchShow">
             <el-form-item label="姓名：">
               <el-input v-model="search.name"></el-input>
@@ -43,7 +44,7 @@
             <el-table-column label="#" type="index"></el-table-column>
             <el-table-column label="姓名" prop="name" header-align="center"></el-table-column>
             <!--<el-table-column label="登录账号" prop="name" header-align="center"></el-table-column>-->
-            <el-table-column label="所属机构" prop="org.name" align="center"></el-table-column>
+            <el-table-column label="所属机构" prop="organization.name" align="center"></el-table-column>
             <el-table-column label="性别" prop="sex" align="center">
               <template slot-scope="scope">
                 <div class="cell" v-if="scope.row.sex === 0">女</div>
@@ -276,7 +277,7 @@
         this.isLoading = true
         var selectedOrg = this.$refs.orgTree.getCurrentNode()
         if (selectedOrg !== null) {
-          this.search['org.path'] = selectedOrg.path
+          this.search['organization.path'] = selectedOrg.path
         }
         // console.log(this.search)
         this.$http.get(this.global.serverPath + 'user', {params: this.search}, {emulateJSON: true})
@@ -346,20 +347,12 @@
           .then((response) => {
             console.log(response.data)
             this.saveBean = response.data
-            // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
-            if (this.saveBean.org != null && this.saveBean.org.id != null) {
-              this.$refs.orgTree.setCurrentKey(this.saveBean.org.id)
+            if (this.saveBean.organization != null && this.saveBean.organization.id != null) {
+              this.$refs.orgTree.setCurrentKey(this.saveBean.organization.id)
             }
             this.saveFormVisible = true
-            // let selectedOrg = this.$refs.orgTree.getNode(this.saveBean.org.id)
-            //
-            // if (selectedOrg !== null) {
-            //   var pathArray = selectedOrg.path.split('/')
-            //   this.saveBean.pathArray = pathArray
-            // }
           }, (response) => {
             console.log('error ==== ' + response)
-            // return this.$message.warning('222')
           })
       },
       save (formName) {
@@ -373,7 +366,6 @@
                 // this.$message(response.msg)
               }, (response) => {
                 console.log('error ==== ' + response)
-                // return this.$message.warning('222')
               })
           } else {
             console.log('error submit!!')
@@ -382,7 +374,7 @@
         })
       },
       handleChange (val) {
-        this.saveBean.org = {id: val[val.length - 1]}
+        this.saveBean.organizationId = val[val.length - 1]
         console.log(this.saveBean)
       },
       getOrgTree () {
