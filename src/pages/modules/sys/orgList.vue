@@ -12,41 +12,9 @@
   </div>
 
   <div class="box">
-    <el-form :inline="true" :model="search"  v-show="searchShow">
-      <el-form-item label="组织名称：">
-        <el-input v-model="search.name"></el-input>
-      </el-form-item>
-      <el-form-item label="组织编码：">
-        <el-input v-model="search.code"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="list">查询</el-button>
-        <el-button plain @click="reset">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <el-table :data="pager.list" border v-loading="isLoading">
-      <el-table-column label="#" type="index"></el-table-column>
-      <el-table-column label="组织名称" prop="name" header-align="center"></el-table-column>
-      <el-table-column label="组织编码" prop="code" header-align="center"></el-table-column>
-      <el-table-column label="路径" prop="path" header-align="center"></el-table-column>
-      <el-table-column label="电话" prop="phone" header-align="center"></el-table-column>
-      <el-table-column label="操作" align="center">
-        <template slot-scope="scope">
-          <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;
-          &nbsp;<a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="block" style="margin-top: 10px">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :page-sizes="[10, 20, 30, 40, 50]"
-        :page-size="pager.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pager.total">
-      </el-pagination>
-    </div>
+    <el-tree :data="orgList" :highlight-current="true" v-loading="isOrgLoading" @node-click="getById" node-key="id" :props="{label:'name'}">
+    </el-tree>
+
   </div>
   <el-dialog :title="saveFormName" :visible.sync="saveFormVisible">
     <el-form :model="saveBean" label-width="20%">
@@ -92,14 +60,8 @@
   export default {
     data: function () {
       return {
-        search: {
-          pageNum: 1,
-          pageSize: 10
-        },
-        pager: {},
-        saveBean: {
-          pathArray: ['0']
-        },
+
+        saveBean: {},
         orgList: [],
         searchShow: false,
         saveFormName: '新增',
@@ -200,11 +162,7 @@
       getOrgTree () {
         this.$http.get(this.global.serverPath + 'organization/tree')
           .then((response) => {
-            this.orgList = []
-            this.orgList.push({'id': '0', 'name': '根节点'})
-            for (var index in response.data) {
-              this.orgList.push(response.data[index])
-            }
+            this.orgList = response.data
           }, (response) => {
             console.log('error ==== ' + response)
           })
