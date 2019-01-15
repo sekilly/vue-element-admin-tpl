@@ -3,44 +3,53 @@
   <div class="page-header">
     <div class="el-form-item">
       <label class="el-form-item__label" >组织管理</label>
-      <div align="right" class="el-form-item__content">
-        <!--<a href="/orgAdd" class="m-button m-button-type-plain"><i class="fa fa-plus"></i> 新增</a>-->
-        <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>
-        <m-button plain @click="searchShow = !searchShow" :class="{ hideStyle: !searchShow }"><i class="fa fa-filter"></i> {{searchBtnName}}</m-button>
-      </div>
     </div>
   </div>
 
   <div class="box">
-    <el-tree :data="orgList" :highlight-current="true" v-loading="isOrgLoading" @node-click="getById" node-key="id" :props="{label:'name'}">
-    </el-tree>
+    <div align="left" class="el-form-item__content">
+
+      <m-button plain ><i class="fa fa-plus"></i> 新增</m-button>
+    </div>
+    <el-container>
+      <el-aside min-width="500px" width="40%">
+        <el-input placeholder="输入关键字进行过滤"  v-model="filterText" style="margin-top: 5px; margin-bottom: 5px"></el-input>
+        <el-tree :data="orgList" :highlight-current="true" v-loading="isOrgLoading" ref="orgTree"
+                 :filter-node-method="filterNode" :default-expand-all="true"
+                 @node-click="getById" node-key="id" :props="{label:'name'}">
+        </el-tree>
+      </el-aside>
+      <el-container>
+        <el-main>
+          <el-form :model="saveBean" label-width="20%">
+            <el-form-item label="上级组织：">
+              <el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="orgList" style="width: 100%"
+                           @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name',disabled:'isLastGrade'}">
+              </el-cascader>
+            </el-form-item>
+            <el-form-item label="组织名称：">
+              <el-input v-model="saveBean.name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="组织编码：">
+              <el-input v-model="saveBean.code" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="联系电话：">
+              <el-input v-model="saveBean.phone" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="排序：">
+              <el-input v-model="saveBean.sort" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-form>
+        </el-main>
+        <el-footer align="center">
+          <el-button type="primary" @click="save">保 存</el-button>
+        </el-footer>
+
+      </el-container>
+    </el-container>
 
   </div>
-  <el-dialog :title="saveFormName" :visible.sync="saveFormVisible">
-    <el-form :model="saveBean" label-width="20%">
-      <el-form-item label="上级组织：">
-        <el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="orgList" style="width: 100%"
-                     @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name',disabled:'isLastGrade'}">
-        </el-cascader>
-      </el-form-item>
-      <el-form-item label="组织名称：">
-        <el-input v-model="saveBean.name" auto-complete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="组织编码：">
-        <el-input v-model="saveBean.code" auto-complete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="联系电话：">
-        <el-input v-model="saveBean.phone" auto-complete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="排序：">
-        <el-input v-model="saveBean.sort" auto-complete="off"></el-input>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="saveFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="save">保 存</el-button>
-    </div>
-  </el-dialog>
+
 </div>
 </template>
 <style>
@@ -60,37 +69,22 @@
   export default {
     data: function () {
       return {
-
+        filterText: '',
         saveBean: {},
         orgList: [],
         searchShow: false,
-        saveFormName: '新增',
-        searchBtnName: '搜索',
-        saveFormVisible: false,
-        isLoading: true
+        isOrgLoading: true
       }
     },
     mounted () {
-      this.list()
       this.getOrgTree()
     },
     methods: {
-      reset () {
-        this.search = {
-          pageNum: 1,
-          pageSize: 10
+      filterNode (value, data) {
+        if (!value) {
+          return true
         }
-        this.list()
-      },
-      handleSizeChange (val) {
-        console.log(`每页 ${val} 条`)
-        this.search.pageSize = val
-        this.list()
-      },
-      handleCurrentChange (val) {
-        console.log(`当前页: ${val}`)
-        this.search.pageNum = val
-        this.list()
+        return data.name.indexOf(value) !== -1
       },
       list () {
         this.$http.get(this.global.serverPath + 'organization', {params: this.search}, {emulateJSON: true})
@@ -111,7 +105,6 @@
         }).then(() => {
           this.$http.delete(this.global.serverPath + 'organization', {params: {'id': id}}, {emulateJSON: true})
             .then((response) => {
-              this.list()
               this.getOrgTree()
               this.$message(response.msg)
             }, (response) => {
@@ -121,12 +114,11 @@
           // this.$message('已取消删除')
         })
       },
-      getById (id) {
+      getById (org, node, obj) {
         this.saveFormName = '编辑'
-        console.log('getById ==== id = ' + id)
-        this.$http.get(this.global.serverPath + 'organization/' + id)
+        console.log('getById ==== id = ' + org.id)
+        this.$http.get(this.global.serverPath + 'organization/' + org.id)
           .then((response) => {
-            this.saveFormVisible = true
             this.saveBean = response.data
             var pathArray = this.saveBean.path.split('/')
             //  删除第一个空字符串 splice第一个参数是从第几个元素开始删除， 第2个参数是删除多少个
@@ -146,8 +138,6 @@
         console.log(this.saveBean)
         this.$http.post(this.global.serverPath + 'organization', this.saveBean, {emulateJSON: true})
           .then((response) => {
-            this.saveFormVisible = false
-            this.list()
             this.getOrgTree()
             // this.$message(response.msg)
           }, (response) => {
@@ -163,24 +153,23 @@
         this.$http.get(this.global.serverPath + 'organization/tree')
           .then((response) => {
             this.orgList = response.data
+            this.isOrgLoading = false
           }, (response) => {
             console.log('error ==== ' + response)
+            this.isOrgLoading = false
           })
       }
     },
     watch: {
-      saveFormVisible (val, oldVal) {
-        if (val === false) {
-          this.saveBean = {pathArray: ['0']}
-          this.saveFormName = '新增'
-        }
-      },
       searchShow (val, oldVal) {
         if (val === true) {
           this.searchBtnName = '隐藏'
         } else {
           this.searchBtnName = '搜索'
         }
+      },
+      filterText (val) {
+        this.$refs.orgTree.filter(val)
       }
     }
   }

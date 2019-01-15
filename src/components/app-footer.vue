@@ -1,11 +1,11 @@
 <template>
-<div class="app-footer-box">
-  <!-- <img src="../assets/logo.png" alt="logo" class="footer-logo"> -->
-  <i class="fa fa-meetup" style="color: #29ABE2"></i>&nbsp;
-  <span class="footer-text">{{appName}} ©make by <a href="#" target="_blank">{{author}}</a>
-  &nbsp;版本号：<el-tag size="mini">{{version}}</el-tag>
-  </span>
-</div>
+    <div class="app-footer-box">
+      <!-- <img src="../assets/logo.png" alt="logo" class="footer-logo"> -->
+      <i class="fa fa-meetup" style="color: #29ABE2"></i>&nbsp;
+      <span class="footer-text">{{appName}} ©make by <a href="#" target="_blank">{{author}}</a>
+      &nbsp;版本号：<el-tag size="mini">{{version}}</el-tag>
+      </span>
+    </div>
 </template>
 <script type="text/javascript">
 export default {
