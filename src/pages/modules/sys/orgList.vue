@@ -9,7 +9,8 @@
   <div class="box">
     <div align="left" class="el-form-item__content">
 
-      <m-button plain ><i class="fa fa-plus"></i> 新增</m-button>
+      <m-button plain  @click="addRootOrg"><i class="fa fa-plus"></i> 新建顶级</m-button>
+      <m-button plain  @click="addOrg"><i class="fa fa-plus"></i> 添加下级</m-button>
     </div>
     <el-container>
       <el-aside min-width="500px" width="40%">
@@ -22,7 +23,7 @@
       <el-container>
         <el-main>
           <el-form :model="saveBean" label-width="20%">
-            <el-form-item label="上级组织：">
+            <el-form-item label="上级组织：" v-if="saveBean.parentId !== '0'">
               <el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="orgList" style="width: 100%"
                            @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name',disabled:'isLastGrade'}">
               </el-cascader>
@@ -70,7 +71,9 @@
     data: function () {
       return {
         filterText: '',
-        saveBean: {},
+        saveBean: {
+          parentId: ''
+        },
         orgList: [],
         searchShow: false,
         isOrgLoading: true
@@ -85,16 +88,6 @@
           return true
         }
         return data.name.indexOf(value) !== -1
-      },
-      list () {
-        this.$http.get(this.global.serverPath + 'organization', {params: this.search}, {emulateJSON: true})
-          .then((response) => {
-            this.isLoading = false
-            this.pager = response.data
-          }, (response) => {
-            this.isLoading = false
-            console.log('error ==== ' + response)
-          })
       },
       del (id) {
         console.log('delete ==== id = ' + id)
@@ -158,16 +151,15 @@
             console.log('error ==== ' + response)
             this.isOrgLoading = false
           })
+      },
+      addRootOrg () {
+        this.saveBean.parentId = '0'
+      },
+      addOrg () {
+        // this.saveBean.parentId = '0'
       }
     },
     watch: {
-      searchShow (val, oldVal) {
-        if (val === true) {
-          this.searchBtnName = '隐藏'
-        } else {
-          this.searchBtnName = '搜索'
-        }
-      },
       filterText (val) {
         this.$refs.orgTree.filter(val)
       }
