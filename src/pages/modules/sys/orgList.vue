@@ -20,7 +20,7 @@
                  @node-click="getById" node-key="id" :props="{label:'name'}">
         </el-tree>
       </el-aside>
-      <el-container>
+      <el-container :visible="saveFormVisible">
         <el-main>
           <el-form :model="saveBean" label-width="20%">
             <el-form-item label="上级组织：" v-if="saveBean.parentId !== '0'">
@@ -75,7 +75,7 @@
           parentId: ''
         },
         orgList: [],
-        searchShow: false,
+        saveFormVisible: false,
         isOrgLoading: true
       }
     },
@@ -154,9 +154,10 @@
       },
       addRootOrg () {
         this.saveBean.parentId = '0'
+        this.saveBean.saveFormVisible = true
       },
       addOrg () {
-        // this.saveBean.parentId = '0'
+        this.saveBean.saveFormVisible = true
       }
     },
     watch: {
