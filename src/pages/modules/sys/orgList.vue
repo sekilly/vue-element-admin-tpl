@@ -17,16 +17,19 @@
         <el-input placeholder="输入关键字进行过滤"  v-model="filterText" style="margin-top: 5px; margin-bottom: 5px"></el-input>
         <el-tree :data="orgList" :highlight-current="true" v-loading="isOrgLoading" ref="orgTree"
                  :filter-node-method="filterNode" :default-expand-all="true"
-                 @node-click="getById" node-key="id" :props="{label:'name'}">
+                 @node-click="getById" node-key="id" :props="{label:'name'}" :render-content="renderContent">
         </el-tree>
       </el-aside>
-      <el-container :visible="saveFormVisible">
+      <el-container v-if="saveFormVisible">
         <el-main>
-          <el-form :model="saveBean" label-width="20%">
-            <el-form-item label="上级组织：" v-if="saveBean.parentId !== '0'">
+          <el-form :model="saveBean" label-width="20%" v-loading="detailLoading">
+            <!--<el-form-item label="上级组织：" v-if="saveBean.parentId !== '0'">
               <el-cascader change-on-select expand-trigger="hover" :show-all-levels="false" :options="orgList" style="width: 100%"
                            @change="handleChange" v-model="saveBean.pathArray" :props="{value:'id',label:'name',disabled:'isLastGrade'}">
               </el-cascader>
+            </el-form-item>-->
+            <el-form-item label="上级组织：" v-if="saveBean.parentId !== '0'">
+              <el-input v-model="saveBean.parent.name" auto-complete="off" :readonly="true"></el-input>
             </el-form-item>
             <el-form-item label="组织名称：">
               <el-input v-model="saveBean.name" auto-complete="off"></el-input>
@@ -76,7 +79,8 @@
         },
         orgList: [],
         saveFormVisible: false,
-        isOrgLoading: true
+        isOrgLoading: true,
+        detailLoading: false
       }
     },
     mounted () {
@@ -96,7 +100,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'organization', {params: {'id': id}}, {emulateJSON: true})
+          this.$http.delete(this.global.serverPath + 'organization/'+id)
             .then((response) => {
               this.getOrgTree()
               this.$message(response.msg)
@@ -104,27 +108,19 @@
               console.log('error ==== ' + response)
             })
         }).catch(() => {
-          // this.$message('已取消删除')
         })
       },
       getById (org, node, obj) {
-        this.saveFormName = '编辑'
+        this.detailLoading = true
         console.log('getById ==== id = ' + org.id)
         this.$http.get(this.global.serverPath + 'organization/' + org.id)
           .then((response) => {
             this.saveBean = response.data
-            var pathArray = this.saveBean.path.split('/')
-            //  删除第一个空字符串 splice第一个参数是从第几个元素开始删除， 第2个参数是删除多少个
-            pathArray.splice(0, 1)
-            //  删除最后一个本身的id
-            pathArray.splice(pathArray.length - 1, 1)
-            if (pathArray.length === 0) {
-              pathArray.push('0')
-            }
-            this.saveBean.pathArray = pathArray
+            this.saveFormVisible = true
+            this.detailLoading = false
           }, (response) => {
+            this.detailLoading = false
             console.log('error ==== ' + response)
-            // return this.$message.warning('222')
           })
       },
       save () {
@@ -138,10 +134,6 @@
             // return this.$message.warning('222')
           })
       },
-      handleChange (val) {
-        this.saveBean.parentId = val[val.length - 1]
-        console.log(this.saveBean)
-      },
       getOrgTree () {
         this.$http.get(this.global.serverPath + 'organization/tree')
           .then((response) => {
@@ -153,11 +145,29 @@
           })
       },
       addRootOrg () {
-        this.saveBean.parentId = '0'
-        this.saveBean.saveFormVisible = true
+        this.saveBean = {parentId: '0'}
+        this.saveFormVisible = true
       },
       addOrg () {
-        this.saveBean.saveFormVisible = true
+        var node = this.$refs.orgTree.getCurrentNode()
+        console.log(node)
+        if (node === null) {
+          this.$message('请选择父级节点')
+          return
+        }
+        this.saveBean = {parentId: node.id, parent: node}
+        this.saveFormVisible = true
+      },
+      renderContent(h, { node, data, store }) {
+        return (
+          <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+          <span>
+          <span>{node.label}</span>
+        </span>
+        <span>
+        <a href="javascript:void(0)" on-click={ () => this.del(node.id) } title="删除"><i class="el-icon-delete"></i></a>
+        </span>
+        </span>);
       }
     },
     watch: {
