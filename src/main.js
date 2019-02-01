@@ -122,6 +122,7 @@ Axios.interceptors.response.use(res => {
   } else {
     app && app.$message({
       type: 'warning',
+      dangerouslyUseHTMLString: true,
       message: res.data.msg
     })
     return Promise.reject(new Error(res.data))
