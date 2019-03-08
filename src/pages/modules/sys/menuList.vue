@@ -519,7 +519,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'menu', {params: {'id': obj.id}}, {emulateJSON: true})
+          this.$http.delete(this.global.serverPath + 'menu/'+obj.id)
             .then((response) => {
               this.list()
               // this.getOrgTree()

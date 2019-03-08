@@ -3,24 +3,31 @@
   <div class="page-header">
     <div class="el-form-item">
       <label class="el-form-item__label" >角色管理</label>
-      <div align="right" class="el-form-item__content">
-        <!--<a href="/orgAdd" class="m-button m-button-type-plain"><i class="fa fa-plus"></i> 新增</a>-->
-        <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>
-        <m-button plain @click="searchShow = !searchShow" :class="{ hideStyle: !searchShow }"><i class="fa fa-filter"></i> {{searchBtnName}}</m-button>
-      </div>
+
     </div>
   </div>
 
   <div class="box">
-    <el-form :inline="true" :model="search"  v-show="searchShow">
-      <el-form-item label="角色名称：">
-        <el-input v-model="search.name"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="list">查询</el-button>
-        <el-button plain @click="reset">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <el-main>
+      <div align="left" class="el-form-item__content" style="margin-bottom: 5px">
+        <m-button plain @click="saveFormVisible = true"><i class="fa fa-plus"></i> 新增</m-button>
+        <m-button plain @click="searchShow = !searchShow" :class="{ hideStyle: !searchShow }"><i class="fa fa-filter"></i> {{searchBtnName}}</m-button>
+      </div>
+      <el-form :inline="true" :model="search"  v-show="searchShow">
+        <el-form-item label="角色名称：">
+          <el-input v-model="search.name"></el-input>
+        </el-form-item>
+        <el-form-item label="角色编码：">
+          <el-input v-model="search.enname"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="list">查询</el-button>
+          <el-button plain @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-main>
+
+
     <el-table :data="pager.list" border v-loading="isLoading" max-height="100%">
       <el-table-column label="#" type="index"></el-table-column>
       <el-table-column label="角色名称" prop="name" header-align="center"></el-table-column>
@@ -151,8 +158,8 @@
     data: function () {
       return {
         search: {
-          'page.pageNum': 1,
-          'page.pageSize': 10
+          pageNum: 1,
+          pageSize: 10
         },
         pager: {},
         saveBean: {},
@@ -183,8 +190,8 @@
     methods: {
       reset () {
         this.search = {
-          'page.pageNum': 1,
-          'page.pageSize': 10
+          pageNum: 1,
+          pageSize: 10
         }
         this.list()
       },
@@ -217,7 +224,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'role', {params: {'id': id}}, {emulateJSON: true})
+          this.$http.delete(this.global.serverPath + 'role/'+ id)
             .then((response) => {
               this.list()
               this.getOrgTree()
@@ -270,7 +277,7 @@
         })
       },
       getOrgTree () {
-        this.$http.get(this.global.serverPath + 'org/tree')
+        this.$http.get(this.global.serverPath + 'organization/tree')
           .then((response) => {
             this.orgList = response.data
           }, (response) => {

@@ -128,10 +128,9 @@
         this.$http.post(this.global.serverPath + 'organization', this.saveBean, {emulateJSON: true})
           .then((response) => {
             this.getOrgTree()
-            // this.$message(response.msg)
+            this.$message(response.msg)
           }, (response) => {
             console.log('error ==== ' + response)
-            // return this.$message.warning('222')
           })
       },
       getOrgTree () {
@@ -165,7 +164,7 @@
           <span>{node.label}</span>
         </span>
         <span>
-        <a href="javascript:void(0)" on-click={ () => this.del(node.id) } title="删除"><i class="el-icon-delete"></i></a>
+        <a href="javascript:void(0)" on-click={ () => this.del(data.id) } title="删除"><i class="el-icon-delete"></i></a>
         </span>
         </span>);
       }
