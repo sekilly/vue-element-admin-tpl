@@ -1,28 +1,28 @@
 const menus = [
-  {id: '0', label: '控制面板', path: '/', icon: 'fa fa-dashboard'},
+  {id: '0', name: '控制面板', path: '/', icon: 'fa fa-dashboard'},
   {
     id: 'system',
     icon: 'fa fa-gears',
-    label: '系统设置',
-    submenu: [
+    name: '系统设置',
+    children: [
       {
         id: 'organization',
-        label: '组织管理',
+        name: '组织管理',
         icon: 'fa el-icon-menu',
-        submenu: [
-          {id: 'user', name: 'user', label: '用户管理', icon: 'fa fa-user-o'},
-          {id: 'group', name: 'group', label: '组织管理', icon: 'fa el-icon-menu'},
-          {id: 'role', name: 'role', label: '角色管理', icon: 'fa fa-user-circle-o'},
-          {id: 'job', name: 'job', label: '岗位管理', icon: 'fa fa-trophy'}
+        children: [
+          {id: 'user', href: 'user', name: '用户管理', icon: 'fa fa-user-o'},
+          {id: 'group', href: 'group', name: '组织管理', icon: 'fa el-icon-menu'},
+          {id: 'role', href: 'role', name: '角色管理', icon: 'fa fa-user-circle-o'}/*,
+          {id: 'job', href: 'job', name: '岗位管理', icon: 'fa fa-trophy'}*/
         ]
       },
       {
         id: 'setting',
-        label: '系统设置',
+        name: '系统设置',
         icon: 'fa el-icon-setting',
-        submenu: [
-          {id: 'menu', name: 'menu', label: '菜单管理', icon: 'fa fa-bars'},
-          {id: 'dictionary', name: 'dictionary', label: '数据字典', icon: 'fa fa-book'}
+        children: [
+          {id: 'menu', href: 'menu', name: '菜单管理', icon: 'fa fa-bars'}/*,
+          {id: 'dictionary', href: 'dictionary', name: '数据字典', icon: 'fa fa-book'}*/
         ]
       }
     ]
@@ -30,9 +30,9 @@ const menus = [
   {
     id: 'develop',
     icon: 'fa fa-code',
-    label: '开发工具',
-    submenu: [
-      {id: 'genList', name: 'genList', label: '代码生成', icon: 'fa fa-code'}
+    name: '开发工具',
+    children: [
+      {id: 'genList', href: 'genList', name: '代码生成', icon: 'fa fa-code'}
     ]
   }
 ]

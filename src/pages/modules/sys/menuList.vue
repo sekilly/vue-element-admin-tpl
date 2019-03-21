@@ -301,8 +301,8 @@
           </m-row>
           <m-row>
             <m-col md="6">
-              <el-form-item label="是否显示：">
-                <el-checkbox v-model="saveBean.isShow"></el-checkbox>
+              <el-form-item label="是否是权限菜单：">
+                <el-checkbox v-model="saveBean.isPermission"></el-checkbox>
               </el-form-item>
             </m-col>
           </m-row>
@@ -519,7 +519,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'menu/'+obj.id)
+          this.$http.delete(this.global.serverPath + 'menu/' + obj.id)
             .then((response) => {
               this.list()
               // this.getOrgTree()

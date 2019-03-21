@@ -2,7 +2,7 @@
 <div class="page-body">
   <div class="page-header">
     <div class="el-form-item">
-      <label class="el-form-item__label" >角色管理</label>
+      <label class="el-form-item__label" >书籍管理</label>
 
     </div>
   </div>
@@ -14,11 +14,14 @@
         <m-button plain @click="searchShow = !searchShow" :class="{ hideStyle: !searchShow }"><i class="fa fa-filter"></i> {{searchBtnName}}</m-button>
       </div>
       <el-form :inline="true" :model="search"  v-show="searchShow">
-        <el-form-item label="角色名称：">
+        <el-form-item label="书名：">
           <el-input v-model="search.name"></el-input>
         </el-form-item>
-        <el-form-item label="角色编码：">
-          <el-input v-model="search.enname"></el-input>
+        <el-form-item label="作者：">
+          <el-input v-model="search.author"></el-input>
+        </el-form-item>
+        <el-form-item label="状态：">
+          <el-input v-model="search.status"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="list">查询</el-button>
@@ -30,27 +33,27 @@
 
     <el-table :data="pager.list" border v-loading="isLoading" max-height="100%">
       <el-table-column label="#" type="index"></el-table-column>
-      <el-table-column label="角色名称" prop="name" header-align="center"></el-table-column>
-      <el-table-column label="角色编码" prop="enname" header-align="center"></el-table-column>
-      <el-table-column label="是否系统数据" prop="isSys" align="center">
+      <el-table-column label="书名" prop="name" header-align="center"></el-table-column>
+      <el-table-column label="作者" prop="author" header-align="center"></el-table-column>
+      <el-table-column label="评分" prop="score" header-align="center"></el-table-column>
+      <el-table-column label="下载量" prop="downloadCount" header-align="center"></el-table-column>
+      <el-table-column label="状态" prop="status" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.isSys">是</span>
-          <span v-else>否</span>
+          <span v-if="scope.row.status === 0">上架</span>
+          <span v-else-if="scope.row.status === 2">草稿</span>
+          <span v-else-if="scope.row.status === 3">下架</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据范围" prop="dataScope" align="center">
-        <template slot-scope="scope">
-          <span v-if="scope.row.dataScope === 1">所有数据</span>
-          <span v-else-if="scope.row.dataScope === 2">所在组织数据</span>
-          <span v-else-if="scope.row.dataScope === 3">所在组织及以下数据</span>
-          <span v-else-if="scope.row.dataScope === 8">仅本人数据</span>
-          <span v-else-if="scope.row.dataScope === 9">按明细设置</span>
-        </template>
-      </el-table-column>
+
+      <el-table-column label="创建人" prop="createUser.name" align="center"></el-table-column>
+      <el-table-column label="创建时间" prop="createTime" align="center"></el-table-column>
+      <el-table-column label="更新人" prop="updateUser.name" align="center"></el-table-column>
       <el-table-column label="更新时间" prop="updateTime" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <a href="javascript:void(0)" @click="getById(scope.row.id)" title="编辑"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
+          <a href="javascript:void(0)" @click="getById(scope.row.id)" title="上架"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
+          <a href="javascript:void(0)" @click="getById(scope.row.id)" title="下架"><i class="el-icon-edit"></i></a>&nbsp;&nbsp;
           <a href="javascript:void(0)" @click="del(scope.row.id)" title="删除"><i class="el-icon-delete"></i></a>&nbsp;
         </template>
       </el-table-column>
@@ -72,17 +75,21 @@
         <m-container fluid >
           <div class="form-unit">基本信息</div>
           <m-row>
-            <m-col md="6">
-              <el-form-item label="角色名称：" prop="name">
+            <m-col md="10">
+              <el-form-item label="书名：" prop="name">
                 <el-input v-model="saveBean.name" :maxlength="20"></el-input>
               </el-form-item>
             </m-col>
-            <m-col md="6">
-              <el-form-item label="角色编码：" prop="enname">
-                <el-input v-model="saveBean.enname"></el-input>
+          </m-row>
+          <m-row>
+            <m-col md="10">
+              <el-form-item label="作者：">
+                <el-input v-model="saveBean.author"></el-input>
               </el-form-item>
             </m-col>
           </m-row>
+          <!--
+
           <m-row>
             <m-col md="6">
               <el-form-item label="数据范围：">
@@ -116,11 +123,9 @@
                 <el-tree ref="orgTree" v-if="saveBean.dataScope === 9" show-checkbox default-expand-all :default-checked-keys="saveBean.orgIdList" :data="orgList" :highlight-current="true"  node-key="id" :props="{value:'id',label:'name'}"></el-tree>
               </el-form-item>
             </m-col>
-          </m-row>
+          </m-row>-->
         </m-container>
       </m-box>
-
-
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="saveFormVisible = false">取 消</el-button>
@@ -163,29 +168,21 @@
         },
         pager: {},
         saveBean: {},
-        orgList: [],
-        menuTree: [],
         searchShow: false,
         saveFormName: '新增',
         searchBtnName: '搜索',
         saveFormVisible: false,
         isLoading: true,
-        isOrgLoading: true,
         rules: {
           name: [
-            { required: true, message: '请输入角色名称', trigger: 'blur' },
+            { required: true, message: '请录入书名', trigger: 'blur' },
             { min: 2, max: 20, message: '长度在2到20个字符', trigger: 'blur' }
-          ],
-          email: [
-            { type: 'enname', message: '请输入角色编码', trigger: ['blur', 'change'] }
           ]
         }
       }
     },
     mounted () {
       this.list()
-      this.getMenuTree()
-      this.getOrgTree()
     },
     methods: {
       reset () {
@@ -208,7 +205,7 @@
       list () {
         this.isLoading = true
         console.log(this.search)
-        this.$http.get(this.global.serverPath + 'role', {params: this.search}, {emulateJSON: true})
+        this.$http.get(this.global.serverPath + 'book', {params: this.search}, {emulateJSON: true})
           .then((response) => {
             this.isLoading = false
             this.pager = response.data
@@ -224,7 +221,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'role/' + id)
+          this.$http.delete(this.global.serverPath + 'book/' + id)
             .then((response) => {
               this.list()
               this.getOrgTree()
@@ -238,30 +235,19 @@
       },
       getById (id) {
         this.saveFormName = '编辑'
-        this.$http.get(this.global.serverPath + 'role/' + id)
+        this.$http.get(this.global.serverPath + 'book/' + id)
           .then((response) => {
             this.saveBean = response.data
             this.saveFormVisible = true
-            // console.log(this.$refs.orgTree.getNode([this.saveBean.org.id]))
-            // this.$refs.menuTree.setCheckedKeys(this.saveBean.menuIdList)
           }, (response) => {
             console.log('error ==== ' + response)
-            // return this.$message.warning('222')
           })
       },
       save (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.saveBean.menuIdList = this.$refs.menuTree.getCheckedKeys()
-            if (this.saveBean.dataScope === 9) {
-              this.saveBean.orgIdList = this.$refs.orgTree.getCheckedKeys()
-            }
-            this.saveBean.menuList = null
-            this.saveBean.menuIds = null
-            this.saveBean.orgList = null
-            this.saveBean.orgIds = null
             console.log(this.saveBean)
-            this.$http.post(this.global.serverPath + 'role', this.saveBean, {emulateJSON: true})
+            this.$http.post(this.global.serverPath + 'book', this.saveBean, {emulateJSON: true})
               .then((response) => {
                 this.saveFormVisible = false
                 this.list()
@@ -275,22 +261,6 @@
             return false
           }
         })
-      },
-      getOrgTree () {
-        this.$http.get(this.global.serverPath + 'organization/tree')
-          .then((response) => {
-            this.orgList = response.data
-          }, (response) => {
-            console.log('error ==== ' + response)
-          })
-      },
-      getMenuTree () {
-        this.$http.get(this.global.serverPath + 'menu/tree')
-          .then((response) => {
-            this.menuTree = response.data
-          }, (response) => {
-            console.log('error ==== ' + response)
-          })
       }
     },
     watch: {

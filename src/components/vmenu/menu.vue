@@ -26,21 +26,21 @@
         :route="toRoute(val)"
         >
         <i v-if="val.icon" :class="val.icon"></i>
-        <span slot="title">{{val.label}}</span>
+        <span slot="title">{{val.name}}</span>
       </el-menu-item>
     </el-menu-item-group>
     </template>
     <template v-else>
       <el-submenu
-        v-if="item.submenu"
+        v-if="item.children"
         :key="item.id"
         :index="item.id + ''"
         >
         <template slot="title">
           <i v-if="item.icon" :class="item.icon"></i>
-          <span slot="title">{{item.label}}</span>
+          <span slot="title">{{item.name}}</span>
         </template>
-        <menu-list :menus="item.submenu"></menu-list>
+        <menu-list :menus="item.children"></menu-list>
       </el-submenu>
       <el-menu-item
         v-else
@@ -49,7 +49,7 @@
         :route="toRoute(item)"
         >
         <i v-if="item.icon" :class="item.icon"></i>
-        <span slot="title">{{item.label}}</span>
+        <span slot="title">{{item.name}}</span>
       </el-menu-item>
     </template>
   </template>
@@ -92,20 +92,24 @@ export default {
       return Object.prototype.toString.call(v) === '[object Array]'
     },
     toRoute (item) {
-      if (item.name) {
-        return {name: item.name}
+      console.log(item.href)
+      if (item.href) {
+        return {name: item.href}
       } else if (item.path) {
         return {path: item.path}
       }
       return {}
     },
     open (index) {
+      console.log('open')
       this.$emit('open', index)
     },
     close (index) {
+      console.log('close')
       this.$emit('close', index)
     },
     select (index) {
+      console.log('select')
       this.$emit('select', index)
     }
   }

@@ -20,10 +20,11 @@ export default new Router({
         {path: '/userList', name: 'user', component: page('modules/sys/userList')},
         {path: '/roleList', name: 'role', component: page('modules/sys/roleList')},
         {path: '/menuList', name: 'menu', component: page('modules/sys/menuList')},
+        {path: '/bookList', name: 'bookList', component: page('modules/book/bookList')},
         {path: '/genList', name: 'genList', component: page('modules/gen/genList')},
         {path: '/genAdd', name: 'genList', component: page('modules/gen/genAdd')},
         {path: '/genForm', name: 'genList', component: page('modules/gen/genForm')},
-        {path: '/button', name: 'c-button', component: page('c-button')},
+        /* {path: '/button', name: 'c-button', component: page('c-button')},
         {path: '/switch', name: 'c-switch', component: page('c-switch')},
         {path: '/checkbox', name: 'c-checkbox', component: page('c-checkbox')},
         {path: '/alert', name: 'c-alert', component: page('c-alert')},
@@ -34,7 +35,7 @@ export default new Router({
         {path: '/dropdown', name: 'c-dropdown', component: page('c-dropdown')},
         {path: '/navbar', name: 'c-navbar', component: page('c-navbar')},
         {path: '/container', name: 'c-container', component: page('c-container')},
-        {path: '/demo', name: 'demo', component: page('demo')},
+        {path: '/demo', name: 'demo', component: page('demo')}, */
         {path: '/404', name: '404', component: page('404')},
         {path: '/500', name: '500', component: page('500')}
       ]

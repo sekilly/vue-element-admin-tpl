@@ -14,7 +14,7 @@
 </template>
 <script type="text/javascript">
 import VMenu from './vmenu'
-import menus from './menus'
+// import menus from './menus'
 export default {
   props: {
     collapse: Boolean,
@@ -25,10 +25,13 @@ export default {
   },
   data () {
     return {
-      menus,
+      menus: [],
       defaultActive: 'home',
       test: 'asdfasdf'
     }
+  },
+  mounted () {
+    this.initMenus()
   },
   watch: {
     $route () {
@@ -36,6 +39,14 @@ export default {
     }
   },
   methods: {
+    initMenus () {
+      this.$http.get(this.global.serverPath + 'menu/tree?permissionMenu=false')
+        .then((response) => {
+          this.menus = response.data
+        }, (response) => {
+          console.log('error ==== ' + response)
+        })
+    },
     setCurrentRoute () {
       // console.log(this.$route)
       this.defaultActive = this.$route.name

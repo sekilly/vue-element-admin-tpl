@@ -100,7 +100,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'organization/'+id)
+          this.$http.delete(this.global.serverPath + 'organization/' + id)
             .then((response) => {
               this.getOrgTree()
               this.$message(response.msg)
@@ -157,16 +157,16 @@
         this.saveBean = {parentId: node.id, parent: node}
         this.saveFormVisible = true
       },
-      renderContent(h, { node, data, store }) {
+      renderContent (h, { node, data, store }) {
         return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-          <span>
-          <span>{node.label}</span>
-        </span>
-        <span>
-        <a href="javascript:void(0)" on-click={ () => this.del(data.id) } title="删除"><i class="el-icon-delete"></i></a>
-        </span>
-        </span>);
+            <span>
+              <span>{node.label}</span>
+            </span>
+            <span>
+              <a href="javascript:void(0)" on-click={ () => this.del(data.id) } title="删除"><i class="el-icon-delete"></i></a>
+            </span>
+          </span>)
       }
     },
     watch: {

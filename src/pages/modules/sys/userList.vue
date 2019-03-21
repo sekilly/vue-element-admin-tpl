@@ -331,7 +331,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.delete(this.global.serverPath + 'user/'+id)
+          this.$http.delete(this.global.serverPath + 'user/' + id)
             .then((response) => {
               this.list()
               this.$message(response.msg)
