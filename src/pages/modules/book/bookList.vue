@@ -33,10 +33,10 @@
 
     <el-table :data="pager.list" border v-loading="isLoading" max-height="100%">
       <el-table-column label="#" type="index"></el-table-column>
-      <el-table-column label="书名" prop="name" header-align="center"></el-table-column>
-      <el-table-column label="作者" prop="author" header-align="center"></el-table-column>
-      <el-table-column label="评分" prop="score" header-align="center"></el-table-column>
-      <el-table-column label="下载量" prop="downloadCount" header-align="center"></el-table-column>
+      <el-table-column label="书名" prop="name" align="center"></el-table-column>
+      <el-table-column label="作者" prop="author" align="center"></el-table-column>
+      <el-table-column label="评分" prop="score" align="center"></el-table-column>
+      <el-table-column label="下载量" prop="downloadCount" align="center"></el-table-column>
       <el-table-column label="状态" prop="status" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.status === 0">上架</span>
@@ -85,6 +85,13 @@
             <m-col md="10">
               <el-form-item label="作者：">
                 <el-input v-model="saveBean.author"></el-input>
+              </el-form-item>
+            </m-col>
+          </m-row>
+          <m-row>
+            <m-col md="10">
+              <el-form-item label="评分：">
+                <el-rate v-model="score" show-text></el-rate>
               </el-form-item>
             </m-col>
           </m-row>
