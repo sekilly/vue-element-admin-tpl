@@ -24,9 +24,9 @@
     <el-main class="app-body">
       <el-container style="height: 100%;min-height: 100%;overflow: auto" id="appBody">
         <el-main class="app-page-body"><router-view></router-view></el-main>
-        <el-footer class="app-footer" :height="footerHeight + 'px'">
+        <!--<el-footer class="app-footer" :height="footerHeight + 'px'">
           <app-footer></app-footer>
-        </el-footer>
+        </el-footer>-->
       </el-container>
     </el-main>
   </el-container>
@@ -37,7 +37,7 @@
 </template>
 <script type="text/javascript">
 import AppHeader from '@/components/app-header'
-import AppFooter from '@/components/app-footer'
+// import AppFooter from '@/components/app-footer'
 import AppSide from '@/components/app-side'
 export default {
   name: 'app-view',
@@ -53,7 +53,7 @@ export default {
   },
   components: {
     AppHeader,
-    AppFooter,
+    // AppFooter,
     AppSide
   },
   methods: {
@@ -91,10 +91,13 @@ export default {
     background: #ECF0F5;
     padding: 0;
   }
-  .app-container .app-footer{
+  /*.app-container .app-footer{
+    width: 100%;
     background: #fff;
     border-top: solid 1px rgba(48, 54, 62, 0.14);
-  }
+    position: fixed;
+    bottom: 0;
+  }*/
   .app-container .app-page-body{
     overflow: visible;
     padding: 0px;
