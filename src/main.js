@@ -37,6 +37,11 @@ import TableTree from './m/tableTree'
 import SelectTree from './m/selectTree'
 
 import global from './Global'
+
+import TinymceEditor from '@/components/tinymce-editor'
+
+// import VueQuillEditor from 'vue-quill-editor'
+
 Vue.prototype.global = global
 
 Vue.use(ElementUI)
@@ -57,6 +62,9 @@ Vue.use(MLoader)
 Vue.use(MContainer)
 Vue.use(TableTree)
 Vue.use(SelectTree)
+Vue.use(TinymceEditor)
+// Vue.use(VueQuillEditor)
+
 
 
 var whiteList = ['demo', 'login']

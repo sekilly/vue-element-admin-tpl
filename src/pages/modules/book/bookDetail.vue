@@ -2,7 +2,7 @@
 <div class="page-body">
   <div class="page-header">
     <div class="el-form-item">
-      <label class="el-form-item__label" >书籍管理</label>
+      <label class="el-form-item__label" >书籍详情</label>
 
     </div>
   </div>

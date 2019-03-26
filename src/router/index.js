@@ -21,6 +21,7 @@ export default new Router({
         {path: '/roleList', name: 'role', component: page('modules/sys/roleList')},
         {path: '/menuList', name: 'menu', component: page('modules/sys/menuList')},
         {path: '/bookList', name: 'bookList', component: page('modules/book/bookList')},
+        {path: '/bookDetail', name: 'bookDetail', component: page('modules/book/bookDetail')},
         {path: '/genList', name: 'genList', component: page('modules/gen/genList')},
         {path: '/genAdd', name: 'genList', component: page('modules/gen/genAdd')},
         {path: '/genForm', name: 'genList', component: page('modules/gen/genForm')},
