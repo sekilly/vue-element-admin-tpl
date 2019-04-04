@@ -1,12 +1,5 @@
 <template>
-<div class="page-body">
-  <div class="page-header">
-    <div class="el-form-item">
-      <label class="el-form-item__label" >书籍详情</label>
-
-    </div>
-  </div>
-
+<div class="">
   <div class="box">
     <el-main>
       <div align="left" class="el-form-item__content" style="margin-bottom: 5px">
@@ -164,12 +157,12 @@
           ]
         },
         init: {
-          language_url: '/static/tinymce/langs/zh_CN.js',//语言包的路径
+          language_url: '/static/tinymce/langs/zh_CN.js',// 语言包的路径
           language: 'zh_CN',//语言
-          skin_url: '/static/tinymce/skins/lightgray',//skin路径
-          height: 300,//编辑器高度
-          branding: false,//是否禁用“Powered by TinyMCE”
-          menubar: false,//顶部菜单栏显示
+          skin_url: '/static/tinymce/skins/lightgray',// skin路径
+          height: 300,// 编辑器高度
+          branding: false,// 是否禁用“Powered by TinyMCE”
+          menubar: false,// 顶部菜单栏显示
         }
       }
     },

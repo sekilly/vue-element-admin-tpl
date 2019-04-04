@@ -22,13 +22,21 @@
       <app-header @switch="handleSideSwitch" @set-theme="handleSetTheme" @hide-side="handleSwitchHideSide"></app-header>
     </el-header>
     <el-main class="app-body">
+      <el-tabs v-model="editableTabsValue" type="card" editable @edit="handleTabsEdit">
+        <el-tab-pane :key="item.name" v-for="(item, index) in editableTabs" :label="item.title"
+          :name="item.name"
+        >
+          {{item.content}}
+        </el-tab-pane>
+      </el-tabs>
       <el-container style="height: 100%;min-height: 100%;overflow: auto" id="appBody">
         <el-main class="app-page-body"><router-view></router-view></el-main>
-        <!--<el-footer class="app-footer" :height="footerHeight + 'px'">
-          <app-footer></app-footer>
-        </el-footer>-->
+
       </el-container>
     </el-main>
+    <!--<el-footer class="app-footer" :height="footerHeight + 'px'">
+      <app-footer></app-footer>
+    </el-footer>-->
   </el-container>
   <m-back-top body-id="appBody"></m-back-top>
 </el-container>

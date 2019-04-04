@@ -8,7 +8,7 @@
     <form action="" class="login-form">
       <div class="m-list-group">
         <div class="m-list-group-item">
-          <input type="text" placeholder="Username" class="m-input" v-model="user.loginName">
+          <input type="text" placeholder="Username" class="m-input" v-model="user.username">
         </div>
         <div class="m-list-group-item">
           <input type="password" placeholder="Password" class="m-input" v-model="user.password">
@@ -33,7 +33,7 @@ export default {
   data () {
     return {
       user: {
-        loginName: '18190770031',
+        username: '18190770031',
         password: '123456'
       },
       isLoging: false,
@@ -46,7 +46,7 @@ export default {
     ...mapActions(['login']),
     handleLogin () {
       // console.log(this.user)
-      if (!this.user.loginName || !this.user.password) {
+      if (!this.user.username || !this.user.password) {
         return this.$message.warning('用户名和密码不能为空')
       }
       this.isLoging = true
